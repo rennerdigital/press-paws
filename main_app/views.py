@@ -31,3 +31,6 @@ def profile(request, user_id):
 
 class RoomList(ListView):
     model = Room
+
+class RoomDetail(DetailView):
+    model = Room
