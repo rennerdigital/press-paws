@@ -20,12 +20,10 @@
                 </ul>
                 <ul class="right">
                     <!-- {% if user.is_authenticated %} -->
-                        <li>*If user is authenticated*</li>
                         <li><a href="#">View Our Rooms</a></li>
                         <li><a href="#">My Profile</a></li>
                         <li><a href="{% url 'logout' %}">Log Out</a></li>
                     <!-- {% else %} -->
-                        <li>*If not authenticated*</li>
                         <li><a href="#">View Our Rooms</a></li>    
                         <li><a href="{% url 'login' %}">Login</a></li>
                         <li><a href="{% url 'signup' %}">Sign Up</a></li>
