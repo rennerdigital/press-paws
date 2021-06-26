@@ -27,3 +27,8 @@ def profile(request, username):
     user = get_object_or_404(User, username=username)
 
     return render(request, 'main_app/profile.html')
+from .models import Hotel, Room, Profile
+
+
+class RoomList(ListView):
+    model = Room
