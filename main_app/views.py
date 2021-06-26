@@ -27,8 +27,13 @@ def profile(request, username):
     user = get_object_or_404(User, username=username)
 
     return render(request, 'main_app/profile.html')
-from .models import Hotel, Room, Profile
 
+class ProfileView(DetailView):
+        model = User
+        template_name = 'main_app/profile.html'
+
+        def get_user_profile(self, username):   
+            return get_object_or_404(User, username=self.kwargs.get('username'))
 
 class RoomList(ListView):
     model = Room
