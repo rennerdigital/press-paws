@@ -81,8 +81,10 @@ DATABASES = {
         "HOST": 'localhost',
         'USER': 'postgres',
         'PASSWORD': '',
+
     }
 }
+
 
 
 # Password validation
