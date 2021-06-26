@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class Hotel(models.Model):
     name = models.CharField(max_length=100)
-    phone = models.IntegerField(max_length=10)
+    phone = models.IntegerField()
     email = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
     description = models.TextField(max_length=250)
@@ -15,7 +15,7 @@ class Hotel(models.Model):
 
 class Room(models.Model):
     name = models.CharField(max_length=100)
-    capacity = models.IntegerField(max_length=2)
+    capacity = models.IntegerField()
     price = models.FloatField("Price Per Night ($CAD)")
     description = models.TextField(max_length=250)
     is_dog_friendly = models.BooleanField()
@@ -30,9 +30,9 @@ class Room(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = models.IntegerField(max_length=10)
+    phone = models.IntegerField()
     address = models.CharField(max_length=100)
-    credit_card = models.IntegerField(max_length=16)
+    credit_card = models.IntegerField()
 
     def __str__(self):
         return self.name
