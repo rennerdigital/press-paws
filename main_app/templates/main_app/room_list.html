@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,8 +9,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
+
 <body>
     <h1>Room's list</h1>
-    
+
+    {% for room in room_list %}
+    <div class="card">
+        <a href=""></a>
+        <div class="card-content">
+
+            <span class="card-title">{{room.name}}</span>
+            <p>Capacity: {{room.capacity}}</p>
+            <p>Price per night: {{room.price}}</p>
+        </div>
+        <div class="card-action">
+            <a href="">Details</a>
+        </div>
+    </div>
+    {% endfor %}
 </body>
+
 </html>
