@@ -9,3 +9,7 @@ import uuid
 import boto3
 from .models import Hotel, Room, Profile
 # from .forms import FeedingForm
+
+
+class RoomList(ListView):
+    model = Room
