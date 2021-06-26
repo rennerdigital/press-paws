@@ -9,6 +9,9 @@ import uuid
 import boto3
 from .models import Hotel, Room, Profile, User
 
+def home(request):
+  return render(request, 'home.html')
+  
 def signup(request):
   error_message = ''
   if request.method == 'POST':
