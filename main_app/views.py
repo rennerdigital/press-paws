@@ -13,3 +13,6 @@ from .models import Hotel, Room, Profile
 
 class RoomList(ListView):
     model = Room
+
+class RoomDetail(DetailView):
+    model = Room

@@ -15,7 +15,7 @@
 
     {% for room in room_list %}
     <div class="card">
-        <a href=""></a>
+        <a href="{% url 'room_detail' room.id %}">
         <div class="card-content">
 
             <span class="card-title">{{room.name}}</span>
@@ -23,8 +23,9 @@
             <p>Price per night: {{room.price}}</p>
         </div>
         <div class="card-action">
-            <a href="">Details</a>
+            <a href="{% url 'room_detail' room.id %}">Details</a>
         </div>
+        </a>
     </div>
     {% endfor %}
 </body>
