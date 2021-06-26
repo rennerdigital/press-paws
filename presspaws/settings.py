@@ -80,7 +80,7 @@ DATABASES = {
         'NAME': 'presspaws',
         "HOST": 'localhost',
         'USER': 'postgres',
-        'PASSWORD': '',
+        'PASSWORD': 'renner',
     }
 }
 
