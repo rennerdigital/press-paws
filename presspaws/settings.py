@@ -78,9 +78,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'presspaws',
-        "HOST": 'localhost',
-        'USER': 'postgres',
-        'PASSWORD': '',
+        # "HOST": 'localhost',
+        # 'USER': 'postgres',
+        # 'PASSWORD': '',
     }
 }
 
@@ -122,3 +122,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGIN_REDIRECT_URL = '/profile/'
+LOGOUT_REDIRECT_URL = '/'
