@@ -23,17 +23,11 @@ def signup(request):
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
 
-def profile(request, username):
-    user = get_object_or_404(User, username=username)
-
+def profile(request, user_id):
+  user = User.objects.filter(id=user_id)
+  if user == request.user:
     return render(request, 'main_app/profile.html')
-
-class ProfileView(DetailView):
-        model = User
-        template_name = 'main_app/profile.html'
-
-        def get_user_profile(self, username):   
-            return get_object_or_404(User, username=self.kwargs.get('username'))
+  return redirect('/')
 
 class RoomList(ListView):
     model = Room
