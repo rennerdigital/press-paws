@@ -36,7 +36,9 @@ class Profile(models.Model):
     credit_card = models.IntegerField()
 
     def __str__(self):
-        return self.name
+        return self.user.username
+    def get_absolute_url(self):
+        return reverse('profile', kwargs={'user_id': self.id})
 
 
 class Reservation(models.Model):
@@ -50,4 +52,7 @@ class Reservation(models.Model):
 
     def __str__(self):
         return f"reservation from {self.date_from} on {self.date_to}"
+
+    class Meta:
+        ordering = ['date_from']
 

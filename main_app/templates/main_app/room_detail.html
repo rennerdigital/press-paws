@@ -14,7 +14,7 @@
         <p> Dog and Cat friendly </p>
         {% elif room.is_cat_friendly is True %}
         <p> Cat friendly </p>
-        {% elif room.is_dogs_friendly is True %}
+        {% elif room.is_dog_friendly is True %}
         <p> Dog friendly </p>
         {% else %}
         <p> Sorry, cats and dogs will not be comfortable there </p>
@@ -22,7 +22,7 @@
 
     </div>
     <div class="card-action">
-        <a href="{% url 'reservation_create' %}">Make a reservation</a>
+        <a href="{% url 'reservation_create'%}">Make a reservation</a>
     </div>
 </div>
 

@@ -1,2 +1,25 @@
-<h1>my profile</h1>
+{% extends 'base.html' %} {% block content %}
 
+{% if profile.phone %}
+    <h1>My Profile</h1>
+  {% else %}
+    <h1>Build Profile</h1>
+  {% endif %}
+
+  <div class="card">
+  <div class="card-content">
+    <span class="card-title">  
+        <h5>First Name: {{ profile.user.first_name }}</h5>
+        <h5>Last Name: {{ profile.user.last_name }}</h5>
+        <h5>Phone: {{ profile.phone }}</h5>
+        <h5>Address: {{ profile.address }}</h5>
+        <h5>Credit card number: {{ profile.credit_card }}</h5>
+        <button class="btn">
+          <a href="{% url 'profile_update' profile.id %}">Edit Profile</a>
+        </button><hr>
+    </span>
+  </div>
+</div>
+
+
+{% endblock %}
