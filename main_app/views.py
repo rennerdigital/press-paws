@@ -7,11 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 import uuid
 import boto3
-from .models import Hotel, Room, Profile, User
+from .models import Hotel, Reservation, Room, Profile, User
 
 def home(request):
   return render(request, 'home.html')
-  
+
 def signup(request):
   error_message = ''
   if request.method == 'POST':
@@ -37,3 +37,7 @@ class RoomList(ListView):
 
 class RoomDetail(DetailView):
     model = Room
+
+class ReservationCreate(CreateView):
+    model = Reservation
+    fields = ['date_from', 'date_to', 'number_of_guests', 'number_of_pets', 'number_of_nights']
