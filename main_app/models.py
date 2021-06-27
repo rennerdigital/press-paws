@@ -36,3 +36,17 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Reservation(models.Model):
+    date_from = models.DateField()
+    date_to = models.DateField()
+    number_of_guests = models.IntegerField()
+    number_of_pets = models.IntegerField()
+    total_owed = models.FloatField("total price")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"reservation from {self.date_from} on {self.date_to}"
+
