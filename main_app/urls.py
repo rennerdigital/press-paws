@@ -15,5 +15,6 @@ urlpatterns = [
   path('profile/<int:pk>/update/', views.ProfileUpdate.as_view(), name='profile_update'),
   path('profile/<int:profile_id>/add_pet/', views.add_pet, name='add_pet'),
   path('pets/<int:pk>/delete/', views.PetDelete.as_view(), name='delete_pet'),
+  path('pets/<int:pk>/edit/', views.PetUpdate.as_view(), name='edit_pet'),
   path('rooms/', views.RoomList.as_view(), name = 'rooms_index')
 ]
