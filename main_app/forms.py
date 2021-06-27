@@ -18,7 +18,7 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'password1', 'password2', )
 
-class ReservatonForm(ModelForm):
+class ReservationForm(ModelForm):
     room = forms.ModelChoiceField(
         queryset=Room.objects.all(),
         widget = forms.Select(attrs={"class": "choice"}),
@@ -32,7 +32,7 @@ class PetForm(ModelForm):
         model = Pet
         fields = ['name', 'type', 'breed', 'description']
 
-class ReservatonRoomForm(ModelForm):
+class ReservationRoomForm(ModelForm):
     class Meta:
         model = Reservation
         fields = ['date_from', 'date_to', 'number_of_guests', 'number_of_pets', 'number_of_nights']
