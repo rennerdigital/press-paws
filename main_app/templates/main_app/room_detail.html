@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>{{room.name}}</h1>
+<div class="card large">
+    <div class="card-image waves-effect waves-block waves-light">
+        <img src="">
+    </div>
+    <div class="card-content">
+        <p>Capacity: {{room.capacity}}</p>
+        <p>Price per night: {{room.price}}</p>
+        <p>Description: {{room.description}}</p>
+        {% if room.is_dog_friendly is True and room.is_cat_friendly is True %}
+        <p> Dog and Cat friendly </p>
+        {% elif room.is_cat_friendly is True %}
+        <p> Cat friendly </p>
+        {% elif room.is_dogs_friendly is True %}
+        <p> Dog friendly </p>
+        {% else %}
+        <p> Sorry, cats and dogs will not be comfortable there </p>
+        {% endif%}
+
+    </div>
+    <div class="card-action">
+        <a href="">Make a reservation</a>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}
