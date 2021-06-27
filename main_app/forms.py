@@ -31,3 +31,8 @@ class PetForm(ModelForm):
     class Meta:
         model = Pet
         fields = ['name', 'type', 'breed', 'description']
+
+class ReservatonRoomForm(ModelForm):
+    class Meta:
+        model = Reservation
+        fields = ['date_from', 'date_to', 'number_of_guests', 'number_of_pets', 'number_of_nights']

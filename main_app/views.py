@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import uuid
 import boto3
 from .models import Hotel, Room, Profile, User, Reservation, Pet
-from .forms import SignUpForm, ReservatonForm, PetForm
+from .forms import SignUpForm, ReservatonForm, PetForm, ReservatonRoomForm
 
 def home(request):
   return render(request, 'home.html')
@@ -90,3 +90,17 @@ def create_reservation(request):
 class ReservationList(ListView):
     model = Reservation
 
+def room_create_reservation(request, room_id):
+  if request.method == 'POST':
+    form = ReservatonRoomForm(request.POST)
+    if form.is_valid():
+      new_reservation = form.save(commit=False)
+      new_reservation.user_id = request.user.id
+      new_reservation.room_id = room_id
+      new_reservation.save()
+
+    return redirect ('reservation_index')
+
+  form = ReservatonRoomForm()
+  room = Room.objects.get(id=room_id)
+  return render(request, 'main_app/reservation_form.html', {'form': form, 'room': room})
