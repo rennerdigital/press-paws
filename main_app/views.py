@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import uuid
 import boto3
 from .models import Hotel, Room, Profile, User, Reservation, Pet
-from .forms import SignUpForm, ReservatonForm, PetForm
+from .forms import SignUpForm, ReservationForm, PetForm, ReservationRoomForm
 
 def home(request):
   return render(request, 'home.html')
@@ -76,17 +76,49 @@ class RoomDetail(DetailView):
 
 def create_reservation(request):
   if request.method == 'POST':
-    form = ReservatonForm (request.POST)
+    form = ReservationForm (request.POST)
     if form.is_valid():
       new_reservation = form.save(commit=False)
       new_reservation.user_id = request.user.id
       new_reservation.save()
     return redirect ('reservation_index')
 
-  form = ReservatonForm()
+  form = ReservationForm()
   context = {'form': form}
   return render(request, 'main_app/reservation_form.html', context)
 
 class ReservationList(ListView):
     model = Reservation
+
+class ReservationDetail(DetailView):
+    model = Reservation
+    success_url = '/reservations/'
+
+def room_create_reservation(request, room_id):
+  if request.method == 'POST':
+    form = ReservationRoomForm(request.POST)
+    if form.is_valid():
+      new_reservation = form.save(commit=False)
+      new_reservation.user_id = request.user.id
+      new_reservation.room_id = room_id
+      new_reservation.save()
+
+    return redirect ('reservation_index')
+
+  form = ReservationRoomForm()
+  room = Room.objects.get(id=room_id)
+  return render(request, 'main_app/reservation_form.html', {'form': form, 'room': room})
+
+
+class ReservationUpdate(UpdateView):
+  model = Reservation
+  fields = ['date_from', 'date_to', 'number_of_guests', 'number_of_pets', 'number_of_nights']
+  # success_url = '/reservations/'
+  
+class ReservationDelete(DeleteView):
+  model = Reservation
+  success_url = '/reservations/'
+
+
+
 

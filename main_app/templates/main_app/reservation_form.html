@@ -6,6 +6,9 @@
 <h1>Edit Reservation <span class="teal-text">{{object.id}}</span></h1>
 {% else %}
 <h1>Add Reservation</h1>
+  {% if room %}
+  <h2>{{room.name}}</h2>
+  {% endif %}
 {% endif %}
   <form action="" method="post">
     {% csrf_token %}
@@ -20,6 +23,26 @@
     window.M.Datepicker.init(dateEl, {
         format: 'yyyy-mm-dd',
         defaultDate: new Date(),
+        minDate: new Date(),
+        disableDayFn: function(date) {
+          const close = 
+            [
+              [2021, 5, 29],
+              [2021, 5, 30],
+              [2021, 6, 1],
+              [2021, 6, 3],
+              [2021, 6, 5],
+            ]
+          for (i = 0; i < close.length; i++){
+            const d = close[i];
+            console.log(d)
+            if(d[0] === date.getFullYear() && d[1] === date.getMonth() && d[2] === date.getDate()){
+              console.log("equals")
+              return true;
+            }
+          }
+          return false;
+        },
         setDefaultDate: true,
         autoClose: true
     });
@@ -27,6 +50,7 @@
     window.M.Datepicker.init(dateEl, {
         format: 'yyyy-mm-dd',
         defaultDate: new Date(),
+        minDate: new Date(),
         setDefaultDate: true,
         autoClose: true
     });

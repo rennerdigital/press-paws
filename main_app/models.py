@@ -52,6 +52,9 @@ class Reservation(models.Model):
     def __str__(self):
         return f"reservation from {self.date_from} on {self.date_to}"
 
+    def get_absolute_url(self):
+        return reverse('reservation_detail', kwargs={'pk': self.id})
+
     class Meta:
         ordering = ['date_from']
 
