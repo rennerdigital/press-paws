@@ -1,25 +1,51 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} {% block content %} {% if profile.phone %}
+<h1>My Profile</h1>
+{% else %}
+<h1>Build Profile</h1>
+{% endif %}
 
-{% if profile.phone %}
-    <h1>My Profile</h1>
-  {% else %}
-    <h1>Build Profile</h1>
-  {% endif %}
-
-  <div class="card">
+<div class="card">
   <div class="card-content">
-    <span class="card-title">  
-        <h5>First Name: {{ profile.user.first_name }}</h5>
-        <h5>Last Name: {{ profile.user.last_name }}</h5>
-        <h5>Phone: {{ profile.phone }}</h5>
-        <h5>Address: {{ profile.address }}</h5>
-        <h5>Credit card number: {{ profile.credit_card }}</h5>
-        <button class="btn">
-          <a href="{% url 'profile_update' profile.id %}">Edit Profile</a>
-        </button><hr>
+    <span class="card-title">
+      <h5>First Name: {{ profile.user.first_name }}</h5>
+      <h5>Last Name: {{ profile.user.last_name }}</h5>
+      <h5>Phone: {{ profile.phone }}</h5>
+      <h5>Address: {{ profile.address }}</h5>
+      <h5>Credit card number: {{ profile.credit_card }}</h5>
+      <button class="btn">
+        <a href="{% url 'profile_update' profile.id %}">Edit Profile</a>
+      </button>
+      <hr />
     </span>
   </div>
 </div>
 
+<h1>Pets</h1>
+<div class="row">
+  <div class="col s6">
+    {% for pet in profile.pet_set.all %}
+    <div class="card">
+      <div class="card-content">
+        <h5>Name: {{pet.name}}</h5>
+        <h5>Type: {{pet.get_type_display}}</h5>
+        <h5>Breed: {{pet.breed}}</h5>
+        <h5>Description: {{pet.description}}</h5>
+        <a href="{% url 'delete_pet' pet.id %}">delete</a>
+      </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="col s6">
+    <form action="{% url 'add_pet' profile.id %}" method="post">
+      {% csrf_token %} {{ pet_form.as_p }}
+      <input type="submit" class="btn" value="Add Pet" />
+    </form>
+  </div>
+</div>
 
+<script>
+  var selectEl = document.getElementById("id_type");
+  M.FormSelect.init(selectEl);
+</script>
 {% endblock %}
