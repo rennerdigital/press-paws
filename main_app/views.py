@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
-from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 import uuid
 import boto3
 from .models import Hotel, Room, Profile, User
+from .forms import SignUpForm
 
 def home(request):
   return render(request, 'home.html')
@@ -15,14 +15,17 @@ def home(request):
 def signup(request):
   error_message = ''
   if request.method == 'POST':
-    form = UserCreationForm(request.POST)
+    form = SignUpForm(request.POST)
     if form.is_valid():
       user = form.save()
-      login(request, user)
+      username = form.cleaned_data.get('username')
+      raw_password = form.cleaned_data.get('password1')
+      user = authenticate(username=username, password=raw_password)
+      login(request, user)      
       return redirect('profile_create')
     else:
       error_message = 'Invalid sign up - try again'
-  form = UserCreationForm()
+  form = SignUpForm()
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
 
@@ -39,9 +42,13 @@ def profile(request):
     profile = Profile.objects.get(user=request.user)
     return render(request, 'main_app/profile.html', {
         'profile': profile
-    })
+      })
 
-
+class ProfileUpdate(UpdateView):
+    model = Profile
+    fields = ['phone', 'address', 'credit_card']
+    success_url = '/profile/'
+    
 class RoomList(ListView):
     model = Room
 

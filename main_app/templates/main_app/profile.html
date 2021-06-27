@@ -1,34 +1,25 @@
 {% extends 'base.html' %} {% block content %}
 
-<h2>Build your profile</h2>
-<div class="card">
+{% if profile.phone %}
+    <h1>My Profile</h1>
+  {% else %}
+    <h1>Build Profile</h1>
+  {% endif %}
+
+  <div class="card">
   <div class="card-content">
     <span class="card-title">  
         <h5>First Name: {{ profile.user.first_name }}</h5>
         <h5>Last Name: {{ profile.user.last_name }}</h5>
-        <h5>Email: {{ profile.user.email }}</h5>
-        <i class="material-icons right">Edit</i>
+        <h5>Phone: {{ profile.phone }}</h5>
+        <h5>Address: {{ profile.address }}</h5>
+        <h5>Credit card number: {{ profile.credit_card }}</h5>
+        <button class="btn">
+          <a href="{% url 'profile_update' profile.id %}">Edit Profile</a>
+        </button><hr>
     </span>
-  </div>
-  <div class="card-reveal">
-    <span class="card-title grey-text text-darken-4"
-      >Edit Info<i class="material-icons right">close</i></span
-    >
-    <p>
-    <form id="update" action="{% url 'user_update' user.id %}" method="post">
-  {% csrf_token %} {{ user_form.as_p }}
-        <input type="submit" class="btn" value="Update" />
-    </form>
-    </p>
   </div>
 </div>
 
-
-<p id="profile">Phone: {{ profile.phone }}</p>
-<p id="profile">Address: {{ profile.address }}</p>
-<p id="profile">Credit card number: {{ profile.credit_card }}</p>
-<button class="btn">
-  <a href="{% url 'profile_update' profile.id %}">Edit Profile</a>
-</button><hr>
 
 {% endblock %}

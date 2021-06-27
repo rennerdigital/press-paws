@@ -19,15 +19,15 @@
                     <li><a href="#" class="left brand-logo">&nbsp;&nbsp;Press Paws Resort</a></li>
                 </ul>
                 <ul class="right">
-                    <!-- {% if user.is_authenticated %} -->
-                        <li><a href="#">View Our Rooms</a></li>
-                        <li><a href="#">My Profile</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'rooms_index' %}">View Our Rooms</a></li>
+                        <li><a href="{% url 'profile' %}">My Profile</a></li>
                         <li><a href="{% url 'logout' %}">Log Out</a></li>
-                    <!-- {% else %} -->
-                        <li><a href="#">View Our Rooms</a></li>    
+                    {% else %}
+                        <li><a href="{% url 'rooms_index' %}">View Our Rooms</a></li>    
                         <li><a href="{% url 'login' %}">Login</a></li>
                         <li><a href="{% url 'signup' %}">Sign Up</a></li>
-                    <!-- {% endif %} -->
+                    {% endif %}
                   </ul>
             </div>
         </nav>
@@ -39,7 +39,7 @@
   	<footer class="page-footer">
         <div class="right">
 
-           <p>Made with ♥, &copy; SaRenAtee Technologies &nbsp;</p>
+           <p>Made with ♥, &copy; Sarenna Tee Technologies &nbsp;</p>
 
         </div>
     </footer>

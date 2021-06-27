@@ -1,6 +1,10 @@
 {% extends 'base.html' %} {% block content %}
 <body class="card1">
+  {% if object %}
+  <h1>Edit Profile</h1>
+  {% else %}
   <h1>Create Profile</h1>
+  {% endif %}
 
   <form action="" method="post">
     {% csrf_token %}
