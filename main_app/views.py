@@ -16,18 +16,28 @@ def signup(request):
     if form.is_valid():
       user = form.save()
       login(request, user)
-      return redirect('index')
+      return redirect('profile_create')
     else:
       error_message = 'Invalid sign up - try again'
   form = UserCreationForm()
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
 
-def profile(request, user_id):
-  user = User.objects.filter(id=user_id)
-  if user == request.user:
-    return render(request, 'main_app/profile.html')
-  return redirect('/')
+class ProfileCreate(CreateView):
+    model = Profile
+    fields = ['phone', 'address', 'credit_card']
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+    success_url = '/profile/'
+
+def profile(request):
+    profile = Profile.objects.get(user=request.user)
+    return render(request, 'main_app/profile.html', {
+        'profile': profile
+    })
+
 
 class RoomList(ListView):
     model = Room
