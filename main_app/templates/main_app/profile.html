@@ -30,6 +30,7 @@
         <h5>Type: {{pet.get_type_display}}</h5>
         <h5>Breed: {{pet.breed}}</h5>
         <h5>Description: {{pet.description}}</h5>
+        <a href="{% url 'edit_pet' pet.id %}">edit</a> |
         <a href="{% url 'delete_pet' pet.id %}">delete</a>
       </div>
       </a>

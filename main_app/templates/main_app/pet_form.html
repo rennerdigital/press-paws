@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% block content %}
+
+<h1>Edit Pet</h1>
+<form action="" method="post">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+  <input type="submit" value="Save!" class="btn" />
+</form>
+
+<script>
+  var selectEl = document.getElementById("id_type");
+  M.FormSelect.init(selectEl);
+</script>
+
+{% endblock %}

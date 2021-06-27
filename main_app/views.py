@@ -63,6 +63,11 @@ class PetDelete(DeleteView):
   model = Pet
   success_url = '/profile/'
 
+class PetUpdate(UpdateView):
+  model = Pet
+  fields = ['name', 'type', 'breed', 'description']
+  success_url = '/profile/'
+
 class RoomList(ListView):
     model = Room
 
