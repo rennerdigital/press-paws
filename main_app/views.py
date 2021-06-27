@@ -6,10 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 import uuid
 import boto3
-from .models import Hotel, Reservation, Room, Profile, User
-from .models import Hotel, Room, Profile, User, Reservation
-from .forms import SignUpForm, ReservatonForm
-from django import forms
+from .models import Hotel, Room, Profile, User, Reservation, Pet
+from .forms import SignUpForm, ReservatonForm, PetForm
 
 def home(request):
   return render(request, 'home.html')
@@ -42,15 +40,29 @@ class ProfileCreate(CreateView):
 
 def profile(request):
     profile = Profile.objects.get(user=request.user)
+    pet_form = PetForm()
     return render(request, 'main_app/profile.html', {
-        'profile': profile
+        'profile': profile,
+        'pet_form': pet_form
       })
 
 class ProfileUpdate(UpdateView):
     model = Profile
     fields = ['phone', 'address', 'credit_card']
     success_url = '/profile/'
-    
+
+def add_pet(request, profile_id):
+  form = PetForm(request.POST)
+  if form.is_valid():
+    new_pet = form.save(commit=False)
+    new_pet.profile_id = profile_id
+    new_pet.save()
+  return redirect('profile')
+
+class PetDelete(DeleteView):
+  model = Pet
+  success_url = '/profile/'
+
 class RoomList(ListView):
     model = Room
 

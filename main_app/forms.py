@@ -1,3 +1,4 @@
+from main_app.models import Pet
 from django import forms
 from django.db.models.enums import Choices
 from django.db.models.query import QuerySet
@@ -26,13 +27,7 @@ class ReservatonForm(ModelForm):
         model = Reservation
         fields = ['room', 'date_from', 'date_to', 'number_of_guests', 'number_of_pets', 'number_of_nights']
 
-# class ReservatonForm(ModelForm):
-#     room_name = forms.ModelChoiceField(
-#         queryset=Room.objects.all(),
-#         widget = forms.RadioSelect,
-#         )
-
-#     class Meta:
-#         model = Reservation
-#         fields = ['room_name', 'date_from', 'date_to', 'number_of_guests', 'number_of_pets', 'number_of_nights']
-
+class PetForm(ModelForm):
+    class Meta:
+        model = Pet
+        fields = ['name', 'type', 'breed', 'description']

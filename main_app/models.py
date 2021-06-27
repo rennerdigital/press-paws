@@ -40,7 +40,6 @@ class Profile(models.Model):
     def get_absolute_url(self):
         return reverse('profile', kwargs={'user_id': self.id})
 
-
 class Reservation(models.Model):
     date_from = models.DateField()
     date_to = models.DateField()
@@ -56,3 +55,24 @@ class Reservation(models.Model):
     class Meta:
         ordering = ['date_from']
 
+TYPES = (
+    ('D', 'Dog'),
+    ('C', 'Cat')
+)
+
+class Pet(models.Model):
+    name = models.CharField(max_length=100)
+    type = models.CharField(
+        max_length=1,
+        choices=TYPES,
+        default=TYPES[0][0]
+    )
+    breed = models.CharField(max_length=100)
+    description = models.TextField(max_length=250)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        ordering = ['-id']
