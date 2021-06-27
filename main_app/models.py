@@ -2,6 +2,7 @@ from django.db import models
 
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator
 
 class Hotel(models.Model):
     name = models.CharField(max_length=100)
@@ -36,9 +37,23 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
-
     def get_absolute_url(self):
         return reverse('profile', kwargs={'user_id': self.id})
+
+class Reservation(models.Model):
+    date_from = models.DateField()
+    date_to = models.DateField()
+    number_of_guests = models.IntegerField()
+    number_of_pets = models.IntegerField()
+    number_of_nights = models.IntegerField(validators=[MinValueValidator(1)])
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"reservation from {self.date_from} on {self.date_to}"
+
+    class Meta:
+        ordering = ['date_from']
 
 TYPES = (
     ('D', 'Dog'),

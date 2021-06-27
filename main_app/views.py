@@ -6,12 +6,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 import uuid
 import boto3
-from .models import Hotel, Room, Profile, User, Pet
-from .forms import SignUpForm, PetForm
+from .models import Hotel, Room, Profile, User, Reservation, Pet
+from .forms import SignUpForm, ReservatonForm, PetForm
 
 def home(request):
   return render(request, 'home.html')
-  
+
 def signup(request):
   error_message = ''
   if request.method == 'POST':
@@ -68,3 +68,20 @@ class RoomList(ListView):
 
 class RoomDetail(DetailView):
     model = Room
+
+def create_reservation(request):
+  if request.method == 'POST':
+    form = ReservatonForm (request.POST)
+    if form.is_valid():
+      new_reservation = form.save(commit=False)
+      new_reservation.user_id = request.user.id
+      new_reservation.save()
+    return redirect ('reservation_index')
+
+  form = ReservatonForm()
+  context = {'form': form}
+  return render(request, 'main_app/reservation_form.html', context)
+
+class ReservationList(ListView):
+    model = Reservation
+

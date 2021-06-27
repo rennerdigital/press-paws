@@ -12,3 +12,8 @@ body {
     padding-top: 0;
     text-align: right;
   }
+
+
+  .choice {
+    display: block;
+  }

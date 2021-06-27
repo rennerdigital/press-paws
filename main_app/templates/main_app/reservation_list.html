@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %} 
+
+    <h1>Reservation's list</h1>
+
+    {% for reservation in reservation_list %}
+    <div class="card">
+        <div class="card-content">
+
+            <span class="card-title">Reservation: {{reservation.id}}</span>
+            <p>Date from: {{reservation.date_from}}</p>
+            <p>Date to: {{reservation.date_to}}</p>
+        </div>
+        <div class="card-action">
+            <a href="">Details</a>
+        </div>
+        </a>
+    </div>
+    {% endfor %}
+</body>
+
+{% endblock %}

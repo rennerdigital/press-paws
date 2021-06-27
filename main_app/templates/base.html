@@ -8,8 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Press Paws Resort</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <header class="navbar-fixed">
@@ -21,6 +21,8 @@
                 <ul class="right">
                     {% if user.is_authenticated %}
                         <li><a href="{% url 'rooms_index' %}">View Our Rooms</a></li>
+                        <li><a href="{% url 'reservation_index' %}">My Reservations</a></li>
+                        <li><a href="{% url 'reservation_create' %}">Make Reservation</a></li>
                         <li><a href="{% url 'profile' %}">My Profile</a></li>
                         <li><a href="{% url 'logout' %}">Log Out</a></li>
                     {% else %}

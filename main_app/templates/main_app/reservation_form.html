@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if object %}
+<h1>Edit Reservation <span class="teal-text">{{object.id}}</span></h1>
+{% else %}
+<h1>Add Reservation</h1>
+{% endif %}
+  <form action="" method="post">
+    {% csrf_token %}
+    <ul>
+      {{ form.as_ul }}
+      </ul>
+    <input type="submit" value="Submit!" class="btn">
+  </form>
+
+<script>
+    var dateEl = document.getElementById('id_date_from');
+    window.M.Datepicker.init(dateEl, {
+        format: 'yyyy-mm-dd',
+        defaultDate: new Date(),
+        setDefaultDate: true,
+        autoClose: true
+    });
+    var dateEl = document.getElementById('id_date_to');
+    window.M.Datepicker.init(dateEl, {
+        format: 'yyyy-mm-dd',
+        defaultDate: new Date(),
+        setDefaultDate: true,
+        autoClose: true
+    });
+</script>
+
+{% endblock %}
