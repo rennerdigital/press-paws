@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Reservation {{reservation.id}}</h1>
+<div class="card large">
+    <div class="card-image waves-effect waves-block waves-light">
+        <img src="">
+    </div>
+    <div class="card-content">
+        <p>Date from: {{reservation.date_from}}</p>
+        <p>Date to: {{reservation.date_to}}</p>
+    </div>
+    <div class="card-action">
+        <a href="{% url 'edit_reservation' reservation.id %}">edit</a> |
+        <a href="{% url 'delete_reservation' reservation.id %}">delete</a>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}

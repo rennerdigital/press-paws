@@ -90,6 +90,10 @@ def create_reservation(request):
 class ReservationList(ListView):
     model = Reservation
 
+class ReservationDetail(DetailView):
+    model = Reservation
+    success_url = '/reservations/'
+
 def room_create_reservation(request, room_id):
   if request.method == 'POST':
     form = ReservatonRoomForm(request.POST)
@@ -104,3 +108,17 @@ def room_create_reservation(request, room_id):
   form = ReservatonRoomForm()
   room = Room.objects.get(id=room_id)
   return render(request, 'main_app/reservation_form.html', {'form': form, 'room': room})
+
+
+class ReservationUpdate(UpdateView):
+  model = Reservation
+  fields = ['date_from', 'date_to', 'number_of_guests', 'number_of_pets', 'number_of_nights']
+  # success_url = '/reservations/'
+  
+class ReservationDelete(DeleteView):
+  model = Reservation
+  success_url = '/reservations/'
+
+
+
+
