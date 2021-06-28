@@ -2,6 +2,7 @@
 {% block content %}
 
 <h1>Reservation {{reservation.id}}</h1>
+<h1>Room: {{reservation.room}}</h1>
 <div class="card large">
     <div class="card-image waves-effect waves-block waves-light">
         <img src="">
@@ -9,6 +10,10 @@
     <div class="card-content">
         <p>Date from: {{reservation.date_from}}</p>
         <p>Date to: {{reservation.date_to}}</p>
+        <p>Number 0f guests: {{reservation.number_of_guests}}</p>
+        <p>Number of pets: {{reservation.number_of_pets}}</p>
+        <p>Number of nights: {{reservation.number_of_nights}}</p>
+        <p>Total cost: {{reservation.total_owed}}</p>
     </div>
     <div class="card-action">
         <a href="{% url 'edit_reservation' reservation.id %}">edit</a> |

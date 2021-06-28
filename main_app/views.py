@@ -8,6 +8,7 @@ import uuid
 import boto3
 from .models import Hotel, Room, Profile, User, Reservation, Pet
 from .forms import SignUpForm, ReservationForm, PetForm, ReservationRoomForm
+import datetime
 
 def home(request):
   return render(request, 'home.html')
@@ -80,11 +81,32 @@ def create_reservation(request):
     if form.is_valid():
       new_reservation = form.save(commit=False)
       new_reservation.user_id = request.user.id
+      room = Room.objects.get(id=new_reservation.room.id)
+      delta = new_reservation.date_to - new_reservation.date_from
+      new_reservation.number_of_nights = delta.days
+      new_reservation.total_owed = room.price* new_reservation.number_of_nights 
       new_reservation.save()
     return redirect ('reservation_index')
 
   form = ReservationForm()
-  context = {'form': form}
+
+  def getDays(date_from, date_to):
+    days = []
+    day = date_from
+    while day < date_to:
+      days.append([day.year, day.month -1, day.day ])
+      day += datetime.timedelta(days=1)
+    return days
+
+  reservations = Reservation.objects.all()
+  days = list(map(lambda x: getDays(x.date_from, x.date_to), reservations))
+  days = [item for sublist in days for item in sublist]
+  print(days)
+
+  context = {
+    'form': form,
+    'bookedDays': days
+    }
   return render(request, 'main_app/reservation_form.html', context)
 
 class ReservationList(ListView):
@@ -101,6 +123,10 @@ def room_create_reservation(request, room_id):
       new_reservation = form.save(commit=False)
       new_reservation.user_id = request.user.id
       new_reservation.room_id = room_id
+      room = Room.objects.get(id=new_reservation.room.id)
+      delta = new_reservation.date_to - new_reservation.date_from
+      new_reservation.number_of_nights = delta.days
+      new_reservation.total_owed = room.price* new_reservation.number_of_nights 
       new_reservation.save()
 
     return redirect ('reservation_index')

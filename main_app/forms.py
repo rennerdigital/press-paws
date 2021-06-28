@@ -25,7 +25,7 @@ class ReservationForm(ModelForm):
         )
     class Meta:
         model = Reservation
-        fields = ['room', 'date_from', 'date_to', 'number_of_guests', 'number_of_pets', 'number_of_nights']
+        fields = ['room', 'date_from', 'date_to', 'number_of_guests', 'number_of_pets']
 
 class PetForm(ModelForm):
     class Meta:
@@ -35,4 +35,4 @@ class PetForm(ModelForm):
 class ReservationRoomForm(ModelForm):
     class Meta:
         model = Reservation
-        fields = ['date_from', 'date_to', 'number_of_guests', 'number_of_pets', 'number_of_nights']
+        fields = ['date_from', 'date_to', 'number_of_guests', 'number_of_pets']
