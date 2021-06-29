@@ -46,6 +46,7 @@ class Reservation(models.Model):
     number_of_guests = models.IntegerField()
     number_of_pets = models.IntegerField()
     number_of_nights = models.IntegerField(validators=[MinValueValidator(1)])
+    total_owed = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 

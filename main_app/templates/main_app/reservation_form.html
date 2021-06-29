@@ -19,25 +19,17 @@
   </form>
 
 <script>
+    var close = {{ bookedDays }}
+
     var dateEl = document.getElementById('id_date_from');
     window.M.Datepicker.init(dateEl, {
         format: 'yyyy-mm-dd',
         defaultDate: new Date(),
         minDate: new Date(),
         disableDayFn: function(date) {
-          const close = 
-            [
-              [2021, 5, 29],
-              [2021, 5, 30],
-              [2021, 6, 1],
-              [2021, 6, 3],
-              [2021, 6, 5],
-            ]
           for (i = 0; i < close.length; i++){
             const d = close[i];
-            console.log(d)
             if(d[0] === date.getFullYear() && d[1] === date.getMonth() && d[2] === date.getDate()){
-              console.log("equals")
               return true;
             }
           }
@@ -51,6 +43,15 @@
         format: 'yyyy-mm-dd',
         defaultDate: new Date(),
         minDate: new Date(),
+        disableDayFn: function(date) {
+          for (i = 0; i < close.length; i++){
+            const d = close[i];
+            if(d[0] === date.getFullYear() && d[1] === date.getMonth() && d[2] === date.getDate()){
+              return true;
+            }
+          }
+          return false;
+        },
         setDefaultDate: true,
         autoClose: true
     });
