@@ -111,9 +111,13 @@ def create_reservation(request):
 
 class ReservationList(ListView):
     model = Reservation
+    def get_queryset(self):
+      return Reservation.objects.filter(user=self.request.user.id)
 
 class ReservationDetail(DetailView):
     model = Reservation
+    def get_queryset(self):
+      return Reservation.objects.filter(user=self.request.user.id)
     success_url = '/reservations/'
 
 def room_create_reservation(request, room_id):
