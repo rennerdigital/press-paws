@@ -14,6 +14,7 @@
 {% if error_message %}<p class="red-text">{{ error_message }}</p>{% endif %}
 {% if funny_message %}<p class="yellow-text">{{ funny_message }}</p>{% endif %}
 {% if alternate_funny_message %}<p class="purple-text">{{ alternate_funny_message }}</p>{% endif %}
+{% if days_error_message %}<p class="blue-text">{{ days_error_message }}</p>{% endif %}
 
   <form action="" method="post">
     {% csrf_token %}
@@ -46,8 +47,8 @@
     var dateEl = document.getElementById('id_date_to');
     window.M.Datepicker.init(dateEl, {
         format: 'yyyy-mm-dd',
-        defaultDate: new Date(),
-        minDate: new Date(),
+        // defaultDate: new Date(),
+        // minDate: new Date(),
         disableDayFn: function(date) {
           for (i = 0; i < close.length; i++){
             const d = close[i];
@@ -57,7 +58,7 @@
           }
           return false;
         },
-        setDefaultDate: true,
+        // setDefaultDate: true,
         autoClose: true
     });
 </script>

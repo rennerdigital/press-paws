@@ -79,6 +79,7 @@ def create_reservation(request):
   error_message = ""
   funny_message = ""
   alternate_funny_message = ""
+  days_error_message = ""
   if request.method == 'POST':
     form = ReservationForm(request.POST)
     if form.is_valid():
@@ -88,10 +89,13 @@ def create_reservation(request):
         new_reservation.user_id = request.user.id
         new_reservation.room_id = room.id
         delta = new_reservation.date_to - new_reservation.date_from
-        new_reservation.number_of_nights = delta.days
-        new_reservation.total_owed = room.price* new_reservation.number_of_nights 
-        new_reservation.save()
-        return redirect ('reservation_index')
+        if delta.days < 1:
+          days_error_message = "You have to stay longer!"
+        else:
+          new_reservation.number_of_nights = delta.days
+          new_reservation.total_owed = room.price* new_reservation.number_of_nights 
+          new_reservation.save()
+          return redirect ('reservation_index')
       elif new_reservation.number_of_guests > room.people_capacity and new_reservation.number_of_pets > room.pets_capacity:
         alternate_funny_message = "Sorry, that's too many people and pets for this room!"
         print(alternate_funny_message)
@@ -120,7 +124,8 @@ def create_reservation(request):
     'bookedDays': days,
     'error_message': error_message, 
     'funny_message': funny_message, 
-    'alternate_funny_message': alternate_funny_message
+    'alternate_funny_message': alternate_funny_message,
+    'days_error_message': days_error_message
     }
   return render(request, 'main_app/reservation_form.html', context)
 
@@ -139,6 +144,7 @@ def room_create_reservation(request, room_id):
   error_message = ""
   funny_message = ""
   alternate_funny_message = ""
+  days_error_message = ""
   if request.method == 'POST':
     form = ReservationRoomForm(request.POST)
     room = Room.objects.get(id=room_id)
@@ -149,10 +155,13 @@ def room_create_reservation(request, room_id):
         new_reservation.room_id = room_id
         room = Room.objects.get(id=new_reservation.room.id)
         delta = new_reservation.date_to - new_reservation.date_from
-        new_reservation.number_of_nights = delta.days
-        new_reservation.total_owed = room.price* new_reservation.number_of_nights 
-        new_reservation.save()
-        return redirect ('reservation_index')
+        if delta.days < 1:
+          days_error_message = "You have to stay longer!"
+        else:
+          new_reservation.number_of_nights = delta.days
+          new_reservation.total_owed = room.price* new_reservation.number_of_nights 
+          new_reservation.save()
+          return redirect ('reservation_index')
       elif new_reservation.number_of_guests > room.people_capacity and new_reservation.number_of_pets > room.pets_capacity:
         alternate_funny_message = "Sorry, that's too many people and pets for this room!"
         print(alternate_funny_message)
@@ -165,7 +174,7 @@ def room_create_reservation(request, room_id):
 
   form = ReservationRoomForm()
   room = Room.objects.get(id=room_id)
-  return render(request, 'main_app/reservation_form.html', {'form': form, 'room': room, 'error_message': error_message, 'funny_message': funny_message, 'alternate_funny_message': alternate_funny_message})
+  return render(request, 'main_app/reservation_form.html', {'form': form, 'room': room, 'error_message': error_message, 'funny_message': funny_message, 'alternate_funny_message': alternate_funny_message, "days_error_message": days_error_message})
 
 
 class ReservationUpdate(UpdateView):
