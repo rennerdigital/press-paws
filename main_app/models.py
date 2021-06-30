@@ -81,3 +81,11 @@ class Pet(models.Model):
     
     class Meta:
         ordering = ['-id']
+
+class Photo(models.Model):
+    url = models.CharField(max_length=200)
+    pet = models.OneToOneField(Pet, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.url

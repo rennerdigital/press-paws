@@ -6,9 +6,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 import uuid
 import boto3
-from .models import Hotel, Room, Profile, User, Reservation, Pet
+from .models import Hotel, Room, Profile, User, Reservation, Pet, Photo
 from .forms import SignUpForm, ReservationForm, PetForm, ReservationRoomForm
 import datetime
+
+S3_BASE_URL = 'https://s3.us-east-2.amazonaws.com/'
+BUCKET = "presspaws"
 
 def home(request):
   return render(request, 'home.html')
@@ -60,6 +63,29 @@ def add_pet(request, profile_id):
     new_pet = form.save(commit=False)
     new_pet.profile_id = profile_id
     new_pet.save()
+  return redirect('profile')
+
+@login_required
+def add_pet_photo(request, pet_id):
+	# photo-file was the "name" attribute on the <input type="file">
+  photo_file = request.FILES.get('photo-file', None)
+  print("It works")
+  if photo_file:
+    print("It works 2")
+    s3 = boto3.client('s3')
+    # need a unique "key" for S3 / needs image file extension too
+    key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+    # just in case something goes wrong
+    try:
+      s3.upload_fileobj(photo_file, BUCKET, key)
+      # build the full url string
+      url = f"{S3_BASE_URL}{BUCKET}/{key}"
+      print(url)
+      photo = Photo(url=url, pet_id=pet_id, room_id=None)
+      print(photo)
+      photo.save()
+    except:
+      print('An error occurred uploading file to S3')
   return redirect('profile')
 
 class PetDelete(LoginRequiredMixin, DeleteView):
