@@ -10,8 +10,9 @@ from .models import Hotel, Room, Profile, User, Reservation, Pet, Photo
 from .forms import SignUpForm, ReservationForm, PetForm, ReservationRoomForm
 import datetime
 
-S3_BASE_URL = 'https://s3.us-east-2.amazonaws.com/'
-BUCKET = "presspaws"
+S3_BASE_URL = 'https://s3.us-east-1.amazonaws.com/'
+BUCKET = 'annacakecollector'
+
 
 def home(request):
   return render(request, 'home.html')
@@ -81,7 +82,7 @@ def add_pet_photo(request, pet_id):
       # build the full url string
       url = f"{S3_BASE_URL}{BUCKET}/{key}"
       print(url)
-      photo = Photo(url=url, pet_id=pet_id, room_id=None)
+      photo = Photo(url=url, pet_id=pet_id)
       print(photo)
       photo.save()
     except:
