@@ -1,8 +1,8 @@
 from django.db import models
-
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
+import datetime
 
 class Hotel(models.Model):
     name = models.CharField(max_length=100)
@@ -42,8 +42,8 @@ class Profile(models.Model):
         return reverse('profile', kwargs={'user_id': self.id})
 
 class Reservation(models.Model):
-    date_from = models.DateField()
-    date_to = models.DateField()
+    date_from = models.DateField(default=datetime.date.today)
+    date_to = models.DateField(default=(datetime.date.today() + datetime.timedelta(days=1)))
     number_of_guests = models.IntegerField()
     number_of_pets = models.IntegerField()
     number_of_nights = models.IntegerField(validators=[MinValueValidator(1)])
