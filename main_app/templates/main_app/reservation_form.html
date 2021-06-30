@@ -14,6 +14,7 @@
 {% if error_message %}<p class="red-text">{{ error_message }}</p>{% endif %}
 {% if funny_message %}<p class="yellow-text">{{ funny_message }}</p>{% endif %}
 {% if alternate_funny_message %}<p class="purple-text">{{ alternate_funny_message }}</p>{% endif %}
+{% if days_error_message %}<p class="blue-text">{{ days_error_message }}</p>{% endif %}
 
   <form action="" method="post">
     {% csrf_token %}
