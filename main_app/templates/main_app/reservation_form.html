@@ -30,8 +30,8 @@
     var dateEl = document.getElementById('id_date_from');
     window.M.Datepicker.init(dateEl, {
         format: 'yyyy-mm-dd',
-        defaultDate: new Date(),
-        minDate: new Date(),
+        // defaultDate: new Date(),
+        // minDate: new Date(),
         disableDayFn: function(date) {
           for (i = 0; i < close.length; i++){
             const d = close[i];
@@ -41,7 +41,7 @@
           }
           return false;
         },
-        setDefaultDate: true,
+        // setDefaultDate: true,
         autoClose: true
     });
     var dateEl = document.getElementById('id_date_to');
