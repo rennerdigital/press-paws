@@ -2,53 +2,64 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Press Paws Resort</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chicle&display=swap" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/style.css' %}"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chicle&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script defer src="{% static 'css/script.js' %}"></script>
-    
-</head>
-<body>
+  </head>
+  <body>
     <header class="navbar-fixed">
-        <nav>
-            <div class="nav-wrapper">
-                <ul>
-                    <li><a href="/" class="left brand-logo">&nbsp;&nbsp;Press Paws Resort</a></li>
-                </ul>
-                <ul class="right">
-                    {% if user.is_authenticated %}
-                        <li><a href="{% url 'rooms_index' %}">View Our Rooms</a></li>
-                        <li><a href="{% url 'reservation_index' %}">My Reservations</a></li>
-                        <li><a href="{% url 'reservation_create' %}">Make Reservation</a></li>
-                        <li><a href="{% url 'profile' %}">My Profile</a></li>
-                        <li><a href="{% url 'logout' %}">Log Out</a></li>
-                    {% else %}
-                        <li><a href="{% url 'rooms_index' %}">View Our Rooms</a></li>    
-                        <li><a href="{% url 'login' %}">Login</a></li>
-                        <li><a href="{% url 'signup' %}">Sign Up</a></li>
-                    {% endif %}
-                  </ul>
-            </div>
-        </nav>
-    </header>
-    <main class="container">
-        {% block content %}
-        {% endblock %}
-    </main>
-  	<footer class="page-footer">
-        <div class="right">
-
-           <p>Made with ♥, &copy; Sarenna Tee Technologies &nbsp;</p>
-
+      <nav>
+        <div class="nav-wrapper">
+          <ul>
+            <li>
+              <a href="/" class="left brand-logo"
+                >&nbsp;&nbsp;Press Paws Resort</a
+              >
+            </li>
+          </ul>
+          <ul class="right">
+            {% if user.is_authenticated %}
+            <li>Welcome, {{ user.first_name|capfirst }}!</li>
+            <li><a href="{% url 'rooms_index' %}">View Our Rooms</a></li>
+            <li><a href="{% url 'reservation_index' %}">My Reservations</a></li>
+            <li>
+              <a href="{% url 'reservation_create' %}">Make Reservation</a>
+            </li>
+            <li><a href="{% url 'profile' %}">My Profile</a></li>
+            <li><a href="{% url 'logout' %}">Log Out</a></li>
+            {% else %}
+            <li><a href="{% url 'rooms_index' %}">View Our Rooms</a></li>
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'signup' %}">Sign Up</a></li>
+            {% endif %}
+          </ul>
         </div>
+      </nav>
+    </header>
+    <main class="container">{% block content %} {% endblock %}</main>
+    <footer class="page-footer">
+      <div class="right">
+        <p>Made with ♥, &copy; Sarenna Tee Technologies &nbsp;</p>
+      </div>
     </footer>
-</body>
+  </body>
 </html>

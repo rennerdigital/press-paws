@@ -16,7 +16,8 @@ class Hotel(models.Model):
 
 class Room(models.Model):
     name = models.CharField(max_length=100)
-    capacity = models.IntegerField()
+    people_capacity = models.IntegerField()
+    pets_capacity = models.IntegerField()
     price = models.FloatField("Price Per Night ($CAD)")
     description = models.TextField(max_length=250)
     is_dog_friendly = models.BooleanField()

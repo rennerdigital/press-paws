@@ -7,7 +7,8 @@
         <img src="">
     </div>
     <div class="card-content">
-        <p>Capacity: {{room.capacity}}</p>
+        <p>Capacity (people): {{room.people_capacity}}</p>
+        <p>Capacity (pets): {{room.pets_capacity}}</p>
         <p>Price per night: {{room.price}}</p>
         <p>Description: {{room.description}}</p>
         {% if room.is_dog_friendly is True and room.is_cat_friendly is True %}
