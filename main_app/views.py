@@ -76,18 +76,31 @@ class RoomDetail(DetailView):
     model = Room
 
 def create_reservation(request):
+  error_message = ""
+  funny_message = ""
+  alternate_funny_message = ""
   if request.method == 'POST':
-    form = ReservationForm (request.POST)
+    form = ReservationForm(request.POST)
     if form.is_valid():
       new_reservation = form.save(commit=False)
-      new_reservation.user_id = request.user.id
       room = Room.objects.get(id=new_reservation.room.id)
-      delta = new_reservation.date_to - new_reservation.date_from
-      new_reservation.number_of_nights = delta.days
-      new_reservation.total_owed = room.price* new_reservation.number_of_nights 
-      new_reservation.save()
-    return redirect ('reservation_index')
-
+      if new_reservation.number_of_guests <= room.people_capacity and new_reservation.number_of_pets <= room.pets_capacity:
+        new_reservation.user_id = request.user.id
+        new_reservation.room_id = room.id
+        delta = new_reservation.date_to - new_reservation.date_from
+        new_reservation.number_of_nights = delta.days
+        new_reservation.total_owed = room.price* new_reservation.number_of_nights 
+        new_reservation.save()
+        return redirect ('reservation_index')
+      elif new_reservation.number_of_guests > room.people_capacity and new_reservation.number_of_pets > room.pets_capacity:
+        alternate_funny_message = "Sorry, that's too many people and pets for this room!"
+        print(alternate_funny_message)
+      elif new_reservation.number_of_pets > room.pets_capacity:
+        funny_message = "Sorry, that's too many pets for this room!"
+        print(funny_message)
+      else:
+        error_message = "You have exceeded the maximum capacity for this room. Please check out another room or bring fewer people :-)"
+        print(error_message)
   form = ReservationForm()
 
   def getDays(date_from, date_to):
@@ -101,11 +114,13 @@ def create_reservation(request):
   reservations = Reservation.objects.all()
   days = list(map(lambda x: getDays(x.date_from, x.date_to), reservations))
   days = [item for sublist in days for item in sublist]
-  print(days)
 
   context = {
     'form': form,
-    'bookedDays': days
+    'bookedDays': days,
+    'error_message': error_message, 
+    'funny_message': funny_message, 
+    'alternate_funny_message': alternate_funny_message
     }
   return render(request, 'main_app/reservation_form.html', context)
 
@@ -156,7 +171,6 @@ def room_create_reservation(request, room_id):
 class ReservationUpdate(UpdateView):
   model = Reservation
   fields = ['date_from', 'date_to', 'number_of_guests', 'number_of_pets', 'number_of_nights']
-  # success_url = '/reservations/'
   
 class ReservationDelete(DeleteView):
   model = Reservation
