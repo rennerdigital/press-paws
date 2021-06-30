@@ -151,7 +151,7 @@ def create_reservation(request):
 
   context = {
     'form': form,
-    'bookedDays': days,
+    'bookedDays': [],
     'error_message': error_message, 
     'funny_message': funny_message, 
     'alternate_funny_message': alternate_funny_message,
@@ -203,9 +203,23 @@ def room_create_reservation(request, room_id):
         error_message = "You have exceeded the maximum capacity for this room. Please check out another room or bring fewer people :-)"
         print(error_message)
 
-  form = ReservationRoomForm()
+  def getDays(date_from, date_to):
+    days = []
+    day = date_from
+    while day < date_to:
+      days.append([day.year, day.month -1, day.day ])
+      day += datetime.timedelta(days=1)
+    return days
+
   room = Room.objects.get(id=room_id)
-  return render(request, 'main_app/reservation_form.html', {'form': form, 'room': room, 'error_message': error_message, 'funny_message': funny_message, 'alternate_funny_message': alternate_funny_message, "days_error_message": days_error_message})
+  print(room)
+  room_reservations = Reservation.objects.filter(room_id = room_id)
+  print(room_reservations)
+  days = list(map(lambda x: getDays(x.date_from, x.date_to), room_reservations))
+  days = [item for sublist in days for item in sublist]
+
+  form = ReservationRoomForm()
+  return render(request, 'main_app/reservation_form.html', {'form': form, 'room': room, 'error_message': error_message, 'funny_message': funny_message, 'alternate_funny_message': alternate_funny_message, "days_error_message": days_error_message, 'bookedDays': days})
 
 
 class ReservationUpdate(LoginRequiredMixin, UpdateView):
