@@ -30,7 +30,7 @@ def signup(request):
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
 
-class ProfileCreate(CreateView):
+class ProfileCreate(LoginRequiredMixin, CreateView):
     model = Profile
     fields = ['phone', 'address', 'credit_card']
 
@@ -39,6 +39,7 @@ class ProfileCreate(CreateView):
         return super().form_valid(form)
     success_url = '/profile/'
 
+@login_required
 def profile(request):
     profile = Profile.objects.get(user=request.user)
     pet_form = PetForm()
@@ -47,11 +48,12 @@ def profile(request):
         'pet_form': pet_form
       })
 
-class ProfileUpdate(UpdateView):
+class ProfileUpdate(LoginRequiredMixin, UpdateView):
     model = Profile
     fields = ['phone', 'address', 'credit_card']
     success_url = '/profile/'
 
+@login_required
 def add_pet(request, profile_id):
   form = PetForm(request.POST)
   if form.is_valid():
@@ -60,11 +62,11 @@ def add_pet(request, profile_id):
     new_pet.save()
   return redirect('profile')
 
-class PetDelete(DeleteView):
+class PetDelete(LoginRequiredMixin, DeleteView):
   model = Pet
   success_url = '/profile/'
 
-class PetUpdate(UpdateView):
+class PetUpdate(LoginRequiredMixin, UpdateView):
   model = Pet
   fields = ['name', 'type', 'breed', 'description']
   success_url = '/profile/'
@@ -75,6 +77,7 @@ class RoomList(ListView):
 class RoomDetail(DetailView):
     model = Room
 
+@login_required
 def create_reservation(request):
   error_message = ""
   funny_message = ""
@@ -129,17 +132,18 @@ def create_reservation(request):
     }
   return render(request, 'main_app/reservation_form.html', context)
 
-class ReservationList(ListView):
+class ReservationList(LoginRequiredMixin, ListView):
     model = Reservation
     def get_queryset(self):
       return Reservation.objects.filter(user=self.request.user.id)
 
-class ReservationDetail(DetailView):
+class ReservationDetail(LoginRequiredMixin, DetailView):
     model = Reservation
     def get_queryset(self):
       return Reservation.objects.filter(user=self.request.user.id)
     success_url = '/reservations/'
 
+@login_required
 def room_create_reservation(request, room_id):
   error_message = ""
   funny_message = ""
@@ -177,11 +181,11 @@ def room_create_reservation(request, room_id):
   return render(request, 'main_app/reservation_form.html', {'form': form, 'room': room, 'error_message': error_message, 'funny_message': funny_message, 'alternate_funny_message': alternate_funny_message, "days_error_message": days_error_message})
 
 
-class ReservationUpdate(UpdateView):
+class ReservationUpdate(LoginRequiredMixin, UpdateView):
   model = Reservation
   fields = ['date_from', 'date_to', 'number_of_guests', 'number_of_pets', 'number_of_nights']
   
-class ReservationDelete(DeleteView):
+class ReservationDelete(LoginRequiredMixin, DeleteView):
   model = Reservation
   success_url = '/reservations/'
 
