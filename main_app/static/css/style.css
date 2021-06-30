@@ -143,3 +143,9 @@ p {
     background-color: forestgreen;
     opacity: 75%;
 }
+
+form {
+  background-color: rgba(255,255,255,0.8);
+  padding: 20px;
+  border-radius: 20px;
+}
