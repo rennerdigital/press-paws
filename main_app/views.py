@@ -224,8 +224,8 @@ def room_create_reservation(request, room_id):
 
 class ReservationUpdate(LoginRequiredMixin, UpdateView):
   model = Reservation
-  fields = ['date_from', 'date_to', 'number_of_guests', 'number_of_pets', 'number_of_nights']
-  
+  form_class = ReservationForm
+
 class ReservationDelete(LoginRequiredMixin, DeleteView):
   model = Reservation
   success_url = '/reservations/'

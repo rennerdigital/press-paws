@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from main_app.models import Pet
 from django import forms
 from django.db.models.enums import Choices
@@ -26,6 +27,20 @@ class ReservationForm(ModelForm):
     class Meta:
         model = Reservation
         fields = ['room', 'date_from', 'date_to', 'number_of_guests', 'number_of_pets']
+    
+    def clean(self):
+        cleaned_data=super(ReservationForm,self).clean()
+        number_of_guests = cleaned_data.get('number_of_guests')
+        number_of_pets = cleaned_data.get('number_of_pets')
+        room = cleaned_data.get("room")
+        if number_of_guests > room.people_capacity and number_of_pets > room.pets_capacity:
+            raise forms.ValidationError("This is way too many pets and people for this room!")
+        elif number_of_pets > room.pets_capacity:
+            raise forms.ValidationError("Sorry! That's too many pets for this room. Try another!")
+        elif number_of_guests > room.people_capacity:
+            raise forms.ValidationError("That's too many people for this room!")
+        else:
+            return cleaned_data
 
 class PetForm(ModelForm):
     class Meta:
@@ -36,3 +51,4 @@ class ReservationRoomForm(ModelForm):
     class Meta:
         model = Reservation
         fields = ['date_from', 'date_to', 'number_of_guests', 'number_of_pets']
+
