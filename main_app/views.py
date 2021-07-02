@@ -106,36 +106,30 @@ class RoomDetail(DetailView):
 
 @login_required
 def create_reservation(request):
-  error_message = ""
-  funny_message = ""
-  alternate_funny_message = ""
+  error_msg = ""
   days_error_message = ""
   if request.method == 'POST':
     form = ReservationForm(request.POST)
+    print("FORM:", form)
     if form.is_valid():
       new_reservation = form.save(commit=False)
       room = Room.objects.get(id=new_reservation.room.id)
-      if new_reservation.number_of_guests <= room.people_capacity and new_reservation.number_of_pets <= room.pets_capacity:
+      print("ROOM:", room)
+      new_reservation.room_id = room.id
+      print("NEW RES:", new_reservation)
+      if new_reservation.check_room_capacity() == True:
         new_reservation.user_id = request.user.id
-        new_reservation.room_id = room.id
-        delta = new_reservation.date_to - new_reservation.date_from
-        if delta.days < 1:
+        if new_reservation.at_least_one_night() == False:
           days_error_message = "You have to stay longer!"
         else:
-          new_reservation.number_of_nights = delta.days
-          new_reservation.total_owed = room.price* new_reservation.number_of_nights 
+          new_reservation.number_of_nights = new_reservation.at_least_one_night()
+          new_reservation.calculate_price()
           new_reservation.save()
           return redirect ('reservation_index')
-      elif new_reservation.number_of_guests > room.people_capacity and new_reservation.number_of_pets > room.pets_capacity:
-        alternate_funny_message = "Sorry, that's too many people and pets for this room!"
-        print(alternate_funny_message)
-      elif new_reservation.number_of_pets > room.pets_capacity:
-        funny_message = "Sorry, that's too many pets for this room!"
-        print(funny_message)
-      else:
-        error_message = "You have exceeded the maximum capacity for this room. Please check out another room or bring fewer people :-)"
-        print(error_message)
-  form = ReservationForm()
+    else:
+      print("INVALID FORM")
+      error_msg = "Sorry! You either have more pets or people than this room can hold."
+      print(error_msg)
 
   def getDays(date_from, date_to):
     days = []
@@ -185,7 +179,6 @@ def room_create_reservation(request, room_id):
         error_msg = "Sorry! You either have more pets or people than this room can hold."
       else:
         new_reservation.user_id = request.user.id
-        new_reservation.room_id = room_id
         room = Room.objects.get(id=new_reservation.room.id)
         if new_reservation.at_least_one_night() == False:
           days_error_message = "You have to stay longer!"
