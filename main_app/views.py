@@ -122,14 +122,15 @@ def create_reservation(request):
         if new_reservation.at_least_one_night() == False:
           days_error_message = "You have to stay longer!"
         else:
-          new_reservation.number_of_nights = new_reservation.at_least_one_night()
-          new_reservation.calculate_price()
+          new_reservation.calculate_nights_and_price()
           new_reservation.save()
           return redirect ('reservation_index')
     else:
       print("INVALID FORM")
       error_msg = "Sorry! You either have more pets or people than this room can hold."
       print(error_msg)
+  
+  form = ReservationForm()
 
   def getDays(date_from, date_to):
     days = []
@@ -146,9 +147,6 @@ def create_reservation(request):
   context = {
     'form': form,
     'bookedDays': [],
-    'error_message': error_message, 
-    'funny_message': funny_message, 
-    'alternate_funny_message': alternate_funny_message,
     'days_error_message': days_error_message
     }
   return render(request, 'main_app/reservation_form.html', context)
@@ -183,8 +181,7 @@ def room_create_reservation(request, room_id):
         if new_reservation.at_least_one_night() == False:
           days_error_message = "You have to stay longer!"
         else:
-          new_reservation.number_of_nights = new_reservation.at_least_one_night()
-          new_reservation.calculate_price()
+          new_reservation.calculate_nights_and_price()
           new_reservation.save()
           return redirect ('reservation_index')
 
