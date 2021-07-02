@@ -58,7 +58,38 @@ class Reservation(models.Model):
         return reverse('reservation_detail', kwargs={'pk': self.id})
 
     class Meta:
-        ordering = ['date_from']
+        ordering = ['-id']
+    
+    def upto_capacity(self):
+        return self.number_of_guests <= self.room.people_capacity and self.number_of_pets <= self.room.pets_capacity
+    
+    def over_capacity(self):
+        return self.number_of_guests > self.room.people_capacity and self.number_of_pets > self.room.pets_capacity
+    
+    def pets_over_capacity(self):
+        return self.number_of_pets > self.room.pets_capacity
+
+    def people_over_capacity(self):
+        return self.number_of_guests > self.room.people_capacity
+
+    def check_room_capacity(self):
+        self.room = Room.objects.get(id=self.room_id)
+        if self.upto_capacity():
+            return True
+        else:
+            return False
+    
+    def at_least_one_night(self):
+        delta = self.date_to - self.date_from
+        if delta.days >= 1:
+            return delta.days
+        else:
+            return False
+
+    def calculate_price(self, *args, **kwargs):
+        self.room = Room.objects.get(id=self.room_id)
+        self.total_owed = self.room.price * self.number_of_nights
+        super().save(*args, **kwargs)
 
 TYPES = (
     ('D', 'Dog'),

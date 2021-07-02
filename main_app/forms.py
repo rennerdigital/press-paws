@@ -33,6 +33,8 @@ class ReservationForm(ModelForm):
         number_of_guests = cleaned_data.get('number_of_guests')
         number_of_pets = cleaned_data.get('number_of_pets')
         room = cleaned_data.get("room")
+        date_to = cleaned_data.get("date_to")
+        date_from = cleaned_data.get("date_from")
         if number_of_guests > room.people_capacity and number_of_pets > room.pets_capacity:
             raise forms.ValidationError("This is way too many pets and people for this room!")
         elif number_of_pets > room.pets_capacity:
@@ -40,7 +42,11 @@ class ReservationForm(ModelForm):
         elif number_of_guests > room.people_capacity:
             raise forms.ValidationError("That's too many people for this room!")
         else:
-            return cleaned_data
+            delta = date_to - date_from
+            if delta.days < 1:
+                raise forms.ValidationError("You have to stay longer!")
+            else:
+                return cleaned_data
 
 class PetForm(ModelForm):
     class Meta:
