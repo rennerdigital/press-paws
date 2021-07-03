@@ -12,8 +12,8 @@
         <p>Date to: {{reservation.date_to}}</p>
         <p>Number of guests: {{reservation.number_of_guests}}</p>
         <p>Number of pets: {{reservation.number_of_pets}}</p>
-        <p>Number of nights: {{reservation.number_of_nights}}</p>
-        <p>Total cost: {{reservation.total_owed}}</p>
+        <p>Number of nights: {{reservation.calculate_nights}}</p>
+        <p>Total cost: {{reservation.calculate_price}}</p>
     </div>
     <div class="card-action">
         <a href="{% url 'edit_reservation' reservation.id %}">edit</a> |
