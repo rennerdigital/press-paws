@@ -181,6 +181,10 @@ def create_reservation(request):
 
 class ReservationList(LoginRequiredMixin, ListView):
     model = Reservation
+    def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      context['date'] = datetime.date.today()
+      return context
     def get_queryset(self):
       return Reservation.objects.filter(user=self.request.user.id)
 
