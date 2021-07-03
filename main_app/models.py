@@ -46,8 +46,8 @@ class Reservation(models.Model):
     date_to = models.DateField(default=(datetime.date.today() + datetime.timedelta(days=1)))
     number_of_guests = models.IntegerField()
     number_of_pets = models.IntegerField()
-    number_of_nights = models.IntegerField(blank=True)
-    total_owed = models.IntegerField(blank=True)
+    number_of_nights = models.IntegerField(blank=True, null=True)
+    total_owed = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
@@ -86,17 +86,20 @@ class Reservation(models.Model):
         else:
             return False
 
-    # def calculate_nights(self, *args, **kwargs):
-    #     delta = self.date_to - self.date_from
-    #     self.number_of_nights = delta.days
-    #     super().save(*args, **kwargs)
-
-    def calculate_nights_and_price(self, *args, **kwargs):
+    def calculate_nights(self, *args, **kwargs):
+        self.room = Room.objects.get(id=self.room_id)
+        delta = self.date_to - self.date_from
+        self.number_of_nights = delta.days
+        super().save(*args, **kwargs)
+        return self.number_of_nights
+    
+    def calculate_price(self, *args, **kwargs):
         self.room = Room.objects.get(id=self.room_id)
         delta = self.date_to - self.date_from
         self.number_of_nights = delta.days
         self.total_owed = self.room.price * self.number_of_nights
         super().save(*args, **kwargs)
+        return self.total_owed
 
 TYPES = (
     ('D', 'Dog'),
