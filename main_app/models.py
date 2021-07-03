@@ -43,8 +43,8 @@ class Profile(models.Model):
         return reverse('profile', kwargs={'user_id': self.id})
 
 class Reservation(models.Model):
-    date_from = models.DateField(default=datetime.date.today)
-    date_to = models.DateField(default=(datetime.date.today() + datetime.timedelta(days=1)))
+    date_from = models.DateField()
+    date_to = models.DateField()
     number_of_guests = models.IntegerField()
     number_of_pets = models.IntegerField()
     number_of_nights = models.IntegerField(blank=True, null=True)
