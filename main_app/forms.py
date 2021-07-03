@@ -27,9 +27,18 @@ class ReservationForm(ModelForm):
     class Meta:
         model = Reservation
         fields = ['room', 'date_from', 'date_to', 'number_of_guests', 'number_of_pets']
-    
+
+class ReservationUpdateForm(ModelForm):
+    room = forms.ModelChoiceField(
+        queryset=Room.objects.all(),
+        widget = forms.Select(attrs={"class": "choice"}),
+        )
+    class Meta:
+        model = Reservation
+        fields = ['room', 'date_from', 'date_to', 'number_of_guests', 'number_of_pets']
+
     def clean(self):
-        cleaned_data=super(ReservationForm,self).clean()
+        cleaned_data=super(ReservationUpdateForm,self).clean()
         number_of_guests = cleaned_data.get('number_of_guests')
         number_of_pets = cleaned_data.get('number_of_pets')
         room = cleaned_data.get("room")

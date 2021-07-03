@@ -1,5 +1,6 @@
 from typing import List
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
+from django import forms
 from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
@@ -9,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import uuid
 import boto3
 from .models import Feedback, Hotel, Room, Profile, User, Reservation, Pet, Photo, Feedback
-from .forms import SignUpForm, ReservationForm, PetForm, ReservationRoomForm
+from .forms import SignUpForm, ReservationForm, PetForm, ReservationRoomForm, ReservationUpdateForm
 import datetime
 
 from main_app import models
@@ -72,16 +73,12 @@ def add_pet(request, profile_id):
 
 @login_required
 def add_pet_photo(request, pet_id):
-	# photo-file was the "name" attribute on the <input type="file">
   photo_file = request.FILES.get('photo-file', None)
   if photo_file:
     s3 = boto3.client('s3')
-    # need a unique "key" for S3 / needs image file extension too
     key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
-    # just in case something goes wrong
     try:
       s3.upload_fileobj(photo_file, BUCKET, key)
-      # build the full url string
       url = f"{S3_BASE_URL}{BUCKET}/{key}"
       photo = Photo(url=url, key=key, pet_id=pet_id)
       photo.save()
@@ -115,16 +112,12 @@ class RoomDetail(DetailView):
 
 @login_required
 def add_room_photo(request, room_id):
-	# photo-file was the "name" attribute on the <input type="file">
   photo_file = request.FILES.get('photo-file', None)
   if photo_file:
     s3 = boto3.client('s3')
-    # need a unique "key" for S3 / needs image file extension too
     key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
-    # just in case something goes wrong
     try:
       s3.upload_fileobj(photo_file, BUCKET, key)
-      # build the full url string
       url = f"{S3_BASE_URL}{BUCKET}/{key}"
       photo = Photo(url=url, key=key, room_id=room_id)
       photo.save()
@@ -132,32 +125,26 @@ def add_room_photo(request, room_id):
       print('An error occurred uploading file to S3')
   return redirect('room_detail', pk=room_id)
 
-
 @login_required
 def create_reservation(request):
-  error_msg = ""
   days_error_message = ""
+  error_msg = ""
   if request.method == 'POST':
     form = ReservationForm(request.POST)
-    print("FORM:", form)
     if form.is_valid():
       new_reservation = form.save(commit=False)
-      room = Room.objects.get(id=new_reservation.room.id)
-      print("ROOM:", room)
+      room = Room.objects.get(id=new_reservation.room_id)
       new_reservation.room_id = room.id
-      print("NEW RES:", new_reservation)
-      if new_reservation.check_room_capacity() == True:
+      if new_reservation.check_room_capacity() != True:
+        error_msg = "Sorry! You either have more pets or people than this room can hold."
+      else:
         new_reservation.user_id = request.user.id
         if new_reservation.at_least_one_night() == False:
-          days_error_message = "You have to stay longer!"
+          days_error_message = "You have to stay for more than one night!"
         else:
           new_reservation.save()
           return redirect ('reservation_index')
-    else:
-      print("INVALID FORM")
-      error_msg = "Sorry! You either have more pets or people than this room can hold."
-      print(error_msg)
-  
+
   form = ReservationForm()
 
   def getDays(date_from, date_to):
@@ -212,7 +199,7 @@ def room_create_reservation(request, room_id):
         new_reservation.user_id = request.user.id
         room = Room.objects.get(id=new_reservation.room.id)
         if new_reservation.at_least_one_night() == False:
-          days_error_message = "You have to stay longer!"
+          days_error_message = "You have to stay for more than one night!"
         else:
           new_reservation.save()
           return redirect ('reservation_index')
@@ -227,9 +214,7 @@ def room_create_reservation(request, room_id):
 
   form = ReservationRoomForm()
   room = Room.objects.get(id=room_id)
-  # print(room)
   room_reservations = Reservation.objects.filter(room_id = room_id)
-  # print(room_reservations)
   days = list(map(lambda x: getDays(x.date_from, x.date_to), room_reservations))
   days = [item for sublist in days for item in sublist]
 
@@ -237,7 +222,7 @@ def room_create_reservation(request, room_id):
 
 class ReservationUpdate(LoginRequiredMixin, UpdateView):
   model = Reservation
-  form_class = ReservationForm
+  form_class = ReservationUpdateForm
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['bookedDays'] = []
