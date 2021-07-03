@@ -1,3 +1,4 @@
+from typing import List
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -246,6 +247,8 @@ class ReservationDelete(LoginRequiredMixin, DeleteView):
   model = Reservation
   success_url = '/reservations/'
 
+class ContactPage(ListView):
+  model = Hotel
 
 class CreateFeedback(CreateView):
   model = Feedback
