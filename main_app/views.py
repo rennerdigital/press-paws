@@ -70,9 +70,7 @@ def add_pet(request, profile_id):
 def add_pet_photo(request, pet_id):
 	# photo-file was the "name" attribute on the <input type="file">
   photo_file = request.FILES.get('photo-file', None)
-  print("It works")
   if photo_file:
-    print("It works 2")
     s3 = boto3.client('s3')
     # need a unique "key" for S3 / needs image file extension too
     key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
@@ -81,9 +79,7 @@ def add_pet_photo(request, pet_id):
       s3.upload_fileobj(photo_file, BUCKET, key)
       # build the full url string
       url = f"{S3_BASE_URL}{BUCKET}/{key}"
-      print(url)
       photo = Photo(url=url, key=key, pet_id=pet_id)
-      print(photo)
       photo.save()
     except:
       print('An error occurred uploading file to S3')
@@ -91,8 +87,6 @@ def add_pet_photo(request, pet_id):
 
 def delete_pet_photo(request, pet_id):
   pet_photo = Photo.objects.get(pet_id=pet_id)
-  print(pet_photo)
-  print(pet_photo.key)
   s3 = boto3.resource('s3')
   s3.Object(BUCKET, pet_photo.key).delete()
   pet_photo.delete()
@@ -113,6 +107,27 @@ class RoomList(ListView):
 
 class RoomDetail(DetailView):
     model = Room
+
+
+@login_required
+def add_room_photo(request, room_id):
+	# photo-file was the "name" attribute on the <input type="file">
+  photo_file = request.FILES.get('photo-file', None)
+  if photo_file:
+    s3 = boto3.client('s3')
+    # need a unique "key" for S3 / needs image file extension too
+    key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+    # just in case something goes wrong
+    try:
+      s3.upload_fileobj(photo_file, BUCKET, key)
+      # build the full url string
+      url = f"{S3_BASE_URL}{BUCKET}/{key}"
+      photo = Photo(url=url, key=key, room_id=room_id)
+      photo.save()
+    except:
+      print('An error occurred uploading file to S3')
+  return redirect('room_detail', pk=room_id)
+
 
 @login_required
 def create_reservation(request):

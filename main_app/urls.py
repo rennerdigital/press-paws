@@ -6,6 +6,7 @@ urlpatterns = [
   path('', views.home, name='home'),
   path('rooms/', views.RoomList.as_view(), name = 'rooms_index'),
   path('rooms/<int:pk>', views.RoomDetail.as_view(), name = 'room_detail'),
+  path('rooms/<int:room_id>/add_room_photo/', views.add_room_photo, name='add_room_photo'),
   path('accounts/signup/', views.signup, name='signup'),
   path('profile/', views.profile, name='profile'),
   path('reservations/', views.ReservationList.as_view(), name = 'reservation_index'),
