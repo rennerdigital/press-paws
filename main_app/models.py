@@ -58,7 +58,7 @@ class Reservation(models.Model):
         return reverse('reservation_detail', kwargs={'pk': self.id})
 
     class Meta:
-        ordering = ['-id']
+        ordering = ['date_from']
     
     def upto_capacity(self):
         return self.number_of_guests <= self.room.people_capacity and self.number_of_pets <= self.room.pets_capacity

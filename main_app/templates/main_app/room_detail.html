@@ -2,10 +2,18 @@
 {% block content %}
 
 <h1>{{room.name}}</h1>
-<div class="card large">
-    <div class="card-image waves-effect waves-block waves-light">
-        <img src="">
-    </div>
+<div class="card">
+    {% for photo in room.photo_set.all %}
+      <img class="responsive-img card-panel" src="{{photo.url}}">
+      {% empty %}
+      <div class="card-panel teal-text center-align">No Photo Uploaded</div>
+      {% endfor %}
+      <form action="{% url 'add_room_photo' room.id %}" enctype="multipart/form-data" method="POST" class="card-panel">
+      {% csrf_token %}
+      <input type="file" name="photo-file">
+      <br><br>
+      <input type="submit" class="btn" value="Upload Photo">
+    </form>
     <div class="card-content">
         <p>Capacity (people): {{room.people_capacity}}</p>
         <p>Capacity (pets): {{room.pets_capacity}}</p>
