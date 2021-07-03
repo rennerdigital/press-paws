@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %} 
+
+    <h1>Contact Us!</h1>
+
+    {% for hotel in hotel_list %}
+    <div class="card">
+        <div class="card-content">
+            <p>{{hotel.name}}</p>
+            <p>Address: {{hotel.address}}</p>
+            <p>Phone: {{hotel.phone}}</p>
+            <p>Email: {{hotel.email}}</p>
+        </div>
+    {% endfor %}
+</body>
+
+{% endblock %}
