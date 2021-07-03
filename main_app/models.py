@@ -84,6 +84,7 @@ class Pet(models.Model):
 
 class Photo(models.Model):
     url = models.CharField(max_length=200)
+    key = models.CharField(max_length=200)
     pet = models.OneToOneField(Pet, on_delete=models.CASCADE, blank=True, null=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE, blank=True, null=True)
 

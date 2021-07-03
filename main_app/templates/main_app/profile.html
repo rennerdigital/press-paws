@@ -43,6 +43,7 @@
       <input type="file" name="photo-file">
       <br><br>
       <input type="submit" class="btn" value="Upload Photo">
+      <a href="{% url 'delete_pet_photo' pet.id %}">delete photo</a>
     </form>
     </div>
     {% endfor %}

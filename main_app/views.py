@@ -82,12 +82,22 @@ def add_pet_photo(request, pet_id):
       # build the full url string
       url = f"{S3_BASE_URL}{BUCKET}/{key}"
       print(url)
-      photo = Photo(url=url, pet_id=pet_id)
+      photo = Photo(url=url, key=key, pet_id=pet_id)
       print(photo)
       photo.save()
     except:
       print('An error occurred uploading file to S3')
   return redirect('profile')
+
+def delete_pet_photo(request, pet_id):
+  pet_photo = Photo.objects.get(pet_id=pet_id)
+  print(pet_photo)
+  print(pet_photo.key)
+  s3 = boto3.resource('s3')
+  s3.Object(BUCKET, pet_photo.key).delete()
+  pet_photo.delete()
+  return redirect('profile')
+
 
 class PetDelete(LoginRequiredMixin, DeleteView):
   model = Pet
