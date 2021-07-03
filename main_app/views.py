@@ -6,9 +6,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 import uuid
 import boto3
-from .models import Hotel, Room, Profile, User, Reservation, Pet, Photo
+from .models import Feedback, Hotel, Room, Profile, User, Reservation, Pet, Photo, Feedback
 from .forms import SignUpForm, ReservationForm, PetForm, ReservationRoomForm
 import datetime
+
+from main_app import models
 
 S3_BASE_URL = 'https://s3.us-east-1.amazonaws.com/'
 BUCKET = 'annacakecollector'
@@ -240,5 +242,14 @@ class ReservationDelete(LoginRequiredMixin, DeleteView):
   success_url = '/reservations/'
 
 
+class CreateFeedback(CreateView):
+  model = Feedback
+  fields = ['rating', 'message', 'hotel']
+
+  def form_valid(self, form):
+    if self.request.user.is_authenticated:
+        form.instance.user = self.request.user
+    return super().form_valid(form)
+  success_url = '/'
 
 

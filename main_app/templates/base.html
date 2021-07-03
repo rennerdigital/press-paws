@@ -58,7 +58,10 @@
     <main class="container">{% block content %} {% endblock %}</main>
     <footer class="page-footer">
       <div class="right">
-        <p>Made with ♥, &copy; Sarenna Tee Technologies &nbsp;</p>
+        <ul>
+          <li><a href="{%url 'feedback_create' pk=1%}">Provide your feedback</a></li>
+          <li><p>Made with ♥, &copy; Sarenna Tee Technologies &nbsp;</p></li>
+        </ul>
       </div>
     </footer>
   </body>
