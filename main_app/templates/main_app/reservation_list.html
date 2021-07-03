@@ -2,6 +2,10 @@
 {% block content %} 
 
     <h1>Reservations List</h1>
+    {% if reservation_list|length < 1 %}
+    <h2>You don't have any reservations yet!</h2>
+    {% else %}
+
     <h2>Future reservations</h2>
     <div class="card">
         {% for reservation in reservation_list %}
@@ -34,6 +38,7 @@
         {% endif %}
         {% endfor %}
     </div>
+    {% endif %}
 </body>
 
 {% endblock %}

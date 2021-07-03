@@ -40,10 +40,6 @@ p {
   display: block;
 }
 
-select {
-  display: block;
-}
-
 /* Slideshow container */
 .slideshow-container {
   max-width: 1000px;
