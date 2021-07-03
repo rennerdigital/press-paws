@@ -219,6 +219,10 @@ def room_create_reservation(request, room_id):
 class ReservationUpdate(LoginRequiredMixin, UpdateView):
   model = Reservation
   form_class = ReservationForm
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['bookedDays'] = []
+    return context
 
 class ReservationDelete(LoginRequiredMixin, DeleteView):
   model = Reservation
