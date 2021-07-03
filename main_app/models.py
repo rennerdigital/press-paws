@@ -138,18 +138,18 @@ class Photo(models.Model):
         return self.url
 
 RATINGS= (
-    ('1', '1'),
-    ('2', '2'),
-    ('3', '3'),
+    ('5', '5'),
     ('4', '4'),
-    ('5', '5')
+    ('3', '3'),
+    ('2', '2'),
+    ('1', '1'),
 )
 
 class Feedback(models.Model):
     rating = models.CharField(
         max_length=1,
         choices=RATINGS,
-        default=RATINGS[4][0]
+        default=RATINGS[0][0]
     )
     message = models.TextField(max_length=250)
     created = models.DateTimeField(auto_now_add=True)
