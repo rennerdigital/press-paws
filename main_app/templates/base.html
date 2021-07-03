@@ -59,7 +59,7 @@
     <footer class="page-footer">
       <div class="right">
         <ul>
-          <li>  <a href="/hotel/1/add_feedback?next={{ request.path }}">Share your feedback</a></li>
+          <li>  <a href="{% url 'feedback_create' pk=1 %}?next={{request.path}}">Share your feedback</a></li>
           <li><p>Made with ♥, &copy; Sarenna Tee Technologies &nbsp;</p></li>
         </ul>
       </div>
