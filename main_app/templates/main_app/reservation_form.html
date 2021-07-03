@@ -17,7 +17,7 @@
     {% if error_msg %}<p class="blue-text">
       {{ error_msg }}</p>
       {% if room %}
-      <p>This room can hold {{ room.people_capacity }} people and {{ room.pets_capacity }} pets.</p>
+        <p>This room can hold {{ room.people_capacity }} people and {{ room.pets_capacity }} pets.</p>
       {% endif %}
     {% endif %}
     {% csrf_token %}

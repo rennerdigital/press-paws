@@ -148,6 +148,7 @@ def create_reservation(request):
   context = {
     'form': form,
     'bookedDays': [],
+    'error_msg': error_msg,
     'days_error_message': days_error_message
     }
   return render(request, 'main_app/reservation_form.html', context)
