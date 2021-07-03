@@ -129,4 +129,8 @@ STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = '/'
 
+import environ
+environ.Env()
+environ.Env.read_env()
+
 django_heroku.settings(locals())
