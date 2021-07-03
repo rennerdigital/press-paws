@@ -250,10 +250,7 @@ class CreateFeedback(CreateView):
   def form_valid(self, form):
     if self.request.user.is_authenticated:
         form.instance.user = self.request.user
-        # super().form_valid(form)
-        # return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
     return super().form_valid(form)
-  # success_url = '/'
 
   def get_success_url(self):
       next_url = self.request.GET.get("next")

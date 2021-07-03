@@ -6,7 +6,7 @@
     {% for reservation in reservation_list %}
     <div class="card">
         <div class="card-content">
-
+            {% if reservation.date_from > datetime.now %}
             <span class="card-title">Reservation from {{reservation.date_from}} to {{reservation.date_to}}</span>
             <p>Reservation number: {{reservation.id}}</p>
         </div>
@@ -14,6 +14,19 @@
             <a href="{%url 'reservation_detail' reservation.id%}">Details</a>
         </div>
         </a>
+        {% endif %}
+    </div>
+    <div class="card">
+        <div class="card-content">
+            {% if reservation.date_from < datetime.now %}
+            <span class="card-title">Reservation from {{reservation.date_from}} to {{reservation.date_to}}</span>
+            <p>Reservation number: {{reservation.id}}</p>
+        </div>
+        <div class="card-action">
+            <a href="{%url 'reservation_detail' reservation.id%}">Details</a>
+        </div>
+        </a>
+        {% endif %}
     </div>
     {% endfor %}
 </body>
