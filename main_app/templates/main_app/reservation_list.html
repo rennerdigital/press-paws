@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 {% block content %} 
 
-    <h1>Reservation's list</h1>
-    {{ date }}
-    <h1>Future reservations</h1>
+    <h1>Reservations List</h1>
+    <h2>Future reservations</h2>
     <div class="card">
         {% for reservation in reservation_list %}
         {% if reservation.date_from >= date %}
@@ -20,7 +19,7 @@
     </div>
 
     
-    <h1>Past reservations</h1>
+    <h2>Past reservations</h2>
     <div class="card">
         {% for reservation in reservation_list %}
         {% if reservation.date_from < date %}
