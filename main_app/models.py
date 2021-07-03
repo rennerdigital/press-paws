@@ -86,20 +86,24 @@ class Reservation(models.Model):
         else:
             return False
 
-    def calculate_nights(self, *args, **kwargs):
+    def calculate_nights(self):
         self.room = Room.objects.get(id=self.room_id)
         delta = self.date_to - self.date_from
         self.number_of_nights = delta.days
-        super().save(*args, **kwargs)
         return self.number_of_nights
     
-    def calculate_price(self, *args, **kwargs):
+    def calculate_price(self):
         self.room = Room.objects.get(id=self.room_id)
         delta = self.date_to - self.date_from
         self.number_of_nights = delta.days
         self.total_owed = self.room.price * self.number_of_nights
-        super().save(*args, **kwargs)
         return self.total_owed
+
+    def save(self, *args, **kwargs):
+        self.calculate_nights()
+        self.calculate_price()
+        super(Reservation, self).save(*args, **kwargs)
+
 
 TYPES = (
     ('D', 'Dog'),

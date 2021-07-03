@@ -147,8 +147,6 @@ def create_reservation(request):
         if new_reservation.at_least_one_night() == False:
           days_error_message = "You have to stay longer!"
         else:
-          new_reservation.calculate_nights()
-          new_reservation.calculate_price()
           new_reservation.save()
           return redirect ('reservation_index')
     else:
@@ -208,8 +206,6 @@ def room_create_reservation(request, room_id):
         if new_reservation.at_least_one_night() == False:
           days_error_message = "You have to stay longer!"
         else:
-          new_reservation.calculate_nights()
-          new_reservation.calculate_price()
           new_reservation.save()
           return redirect ('reservation_index')
 
@@ -234,6 +230,10 @@ def room_create_reservation(request, room_id):
 class ReservationUpdate(LoginRequiredMixin, UpdateView):
   model = Reservation
   form_class = ReservationForm
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['bookedDays'] = []
+    return context
 
 class ReservationDelete(LoginRequiredMixin, DeleteView):
   model = Reservation
