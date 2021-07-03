@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
+from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from django.contrib.auth import login, authenticate
@@ -249,7 +250,13 @@ class CreateFeedback(CreateView):
   def form_valid(self, form):
     if self.request.user.is_authenticated:
         form.instance.user = self.request.user
+        # super().form_valid(form)
+        # return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
     return super().form_valid(form)
-  success_url = '/'
+  # success_url = '/'
 
-
+  def get_success_url(self):
+      next_url = self.request.GET.get("next")
+      if next_url:
+        return next_url
+      return reverse('home')
