@@ -43,6 +43,15 @@ class ProfileCreate(LoginRequiredMixin, CreateView):
     model = Profile
     fields = ['phone', 'address', 'credit_card']
 
+    def get_form(self, form_class=None):
+      if form_class is None:
+        form_class = self.get_form_class()
+
+      form = super(ProfileCreate, self).get_form(form_class)
+      form.fields['phone'].widget = forms.TextInput(attrs={'placeholder': '###-###-####'})
+      form.fields['credit_card'].widget = forms.TextInput(attrs={'placeholder': '####-####-####-####'})
+      return form
+
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
