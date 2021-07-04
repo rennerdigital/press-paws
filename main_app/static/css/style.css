@@ -149,3 +149,22 @@ form {
   padding: 20px;
   border-radius: 20px;
 }
+
+.confetti {
+  position: fixed;
+  display: block;
+  width: 80%;
+}
+
+::placeholder {
+  color: rgb(99, 99, 99)
+}
+
+.btn a {
+  color: white;
+}
+
+.page-footer .right ul li a {
+  color: white;
+  margin-right: 10px
+}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %} 
+
+{% load static %}<img src="{% static 'media/confetti.gif' %}" alt="confetti" class="confetti" style="z-index: -1;"/>
+<img src="{% static 'media/confetti3.gif' %}" alt="confetti" class="confetti" style="z-index: -1;"/>
+
+<div class="card" style="background-color:orange; z-index: -2;">
+    <div class="card-content">
+<h4 style="text-align:center">Congratulations! Your reservation has been booked.</h4>
+<p style="text-align:center">From {{ latest_res.date_from }} to {{ latest_res.date_to }} for {{ latest_res.number_of_guests}} people and {{ latest_res.number_of_pets}} pets at our {{ latest_res.room}}!</p>
+</div>
+</div>
+
+<h3>Future reservations</h3>
+<div class="card">
+    {% for reservation in reservations %}
+    {% if reservation.date_from >= date %}
+    {% if reservation == latest_res %}
+    <div class="card-content">
+        <span class="card-title">Reservation from {{reservation.date_from}} to {{reservation.date_to}} &nbsp;<span style="color:gold; border:2px solid black; border-radius: 10px; background-color: black; padding:5px">NEW!</span></span>
+        <p>Reservation number: {{reservation.id}}</p>
+    </div>
+    <div class="card-action">
+        <a href="{%url 'reservation_detail' reservation.id%}">Details</a>
+    </div>
+    <hr>
+    {% endif %}
+    <div class="card-content">
+        <span class="card-title">Reservation from {{reservation.date_from}} to {{reservation.date_to}}</span>
+        <p>Reservation number: {{reservation.id}}</p>
+    </div>
+    <div class="card-action">
+        <a href="{%url 'reservation_detail' reservation.id%}">Details</a>
+    </div>
+    <hr>
+    {% endif %}
+    {% endfor %}
+</div>
+
+
+<h3>Past reservations</h3>
+<div class="card">
+    {% for reservation in reservations %}
+    {% if reservation.date_from < date %}
+    <div class="card-content">
+        <span class="card-title">Reservation from {{reservation.date_from}} to {{reservation.date_to}}</span>
+        <p>Reservation number: {{reservation.id}}</p>
+    </div>
+    <div class="card-action">
+        <a href="{%url 'reservation_detail' reservation.id%}">Details</a>
+    </div>
+    <hr>
+    {% endif %}
+    {% endfor %}
+</div>
+</body>
+
+{% endblock %}
