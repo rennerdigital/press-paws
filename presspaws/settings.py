@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -76,11 +77,11 @@ WSGI_APPLICATION = 'presspaws.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'presspaws',
-        "HOST": 'localhost',
-        'USER': 'postgres',
-        'PASSWORD': 'renner',
+        # "HOST": 'localhost',
+        # 'USER': 'postgres',
+        # 'PASSWORD': 'renner',
 
     }
 }
@@ -127,3 +128,9 @@ STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = '/'
+
+import environ
+environ.Env()
+environ.Env.read_env()
+
+django_heroku.settings(locals())

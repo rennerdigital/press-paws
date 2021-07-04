@@ -43,6 +43,15 @@ class ProfileCreate(LoginRequiredMixin, CreateView):
     model = Profile
     fields = ['phone', 'address', 'credit_card']
 
+    def get_form(self, form_class=None):
+      if form_class is None:
+        form_class = self.get_form_class()
+
+      form = super(ProfileCreate, self).get_form(form_class)
+      form.fields['phone'].widget = forms.TextInput(attrs={'placeholder': '###-###-####'})
+      form.fields['credit_card'].widget = forms.TextInput(attrs={'placeholder': '####-####-####-####'})
+      return form
+
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
@@ -50,11 +59,18 @@ class ProfileCreate(LoginRequiredMixin, CreateView):
 
 @login_required
 def profile(request):
+  try:
+    Profile.objects.get(user=request.user)
     profile = Profile.objects.get(user=request.user)
     pet_form = PetForm()
     return render(request, 'main_app/profile.html', {
         'profile': profile,
         'pet_form': pet_form
+      })
+  except Profile.DoesNotExist:
+    profile = None
+    return render(request, 'main_app/profile.html', {
+      'profile': profile,
       })
 
 class ProfileUpdate(LoginRequiredMixin, UpdateView):
@@ -143,7 +159,7 @@ def create_reservation(request):
           days_error_message = "You have to stay for more than one night!"
         else:
           new_reservation.save()
-          return redirect ('reservation_index')
+          return redirect ('successful_reservation')
 
   form = ReservationForm()
 
@@ -202,7 +218,7 @@ def room_create_reservation(request, room_id):
           days_error_message = "You have to stay for more than one night!"
         else:
           new_reservation.save()
-          return redirect ('reservation_index')
+          return redirect ('successful_reservation')
 
   def getDays(date_from, date_to):
     days = []
@@ -219,6 +235,12 @@ def room_create_reservation(request, room_id):
   days = [item for sublist in days for item in sublist]
 
   return render(request, 'main_app/reservation_form.html', {'form': form, 'room': room, "days_error_message": days_error_message, 'error_msg': error_msg, 'bookedDays': days})
+
+def successful_reservation(request):
+  reservations = Reservation.objects.filter(user=request.user.id)
+  latest_reservation = reservations.order_by("-id").first
+  date = datetime.date.today()
+  return render(request, 'main_app/reservation_list_success.html', {'reservations': reservations, 'date': date, 'latest_res': latest_reservation})
 
 class ReservationUpdate(LoginRequiredMixin, UpdateView):
   model = Reservation
@@ -241,7 +263,7 @@ class CreateFeedback(CreateView):
 
   def form_valid(self, form):
     if self.request.user.is_authenticated:
-        form.instance.user = self.request.user
+      form.instance.user = self.request.user
     return super().form_valid(form)
 
   def get_success_url(self):
