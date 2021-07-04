@@ -1,8 +1,8 @@
-{% extends 'base.html' %} {% block content %} {% if profile.phone %}
+{% extends 'base.html' %} {% block content %} 
+
+{% if profile %}
 <h1>My Profile</h1>
-{% else %}
-<h1>Build Profile</h1>
-{% endif %}
+
 
 <div class="card">
   <div class="card-content">
@@ -55,6 +55,16 @@
     </form>
   </div>
 </div>
+{% else %}
+
+<div class="card">
+  <div class="card-content">
+    <h4>No profile yet! Create one <span><a href="{% url 'profile_create' %}">here</a></span>.</h4>
+  </div>
+</div>
+
+
+{% endif %}
 
 <script>
   var selectEl = document.getElementById("id_type");

@@ -59,11 +59,18 @@ class ProfileCreate(LoginRequiredMixin, CreateView):
 
 @login_required
 def profile(request):
+  try:
+    Profile.objects.get(user=request.user)
     profile = Profile.objects.get(user=request.user)
     pet_form = PetForm()
     return render(request, 'main_app/profile.html', {
         'profile': profile,
         'pet_form': pet_form
+      })
+  except Profile.DoesNotExist:
+    profile = None
+    return render(request, 'main_app/profile.html', {
+      'profile': profile,
       })
 
 class ProfileUpdate(LoginRequiredMixin, UpdateView):
