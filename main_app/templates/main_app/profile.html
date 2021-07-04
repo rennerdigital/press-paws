@@ -39,11 +39,13 @@
       <div class="card-panel teal-text center-align">No Photo Uploaded</div>
       {% endif %}
       <form action="{% url 'add_pet_photo' pet.id %}" enctype="multipart/form-data" method="POST" class="card-panel">
-      {% csrf_token %}
-      <input type="file" name="photo-file">
-      <br><br>
-      <input type="submit" class="btn" value="Upload Photo">
-      <a href="{% url 'delete_pet_photo' pet.id %}">delete photo</a>
+        {% csrf_token %}
+        <input type="file" name="photo-file">
+        <br><br>
+        <input type="submit" class="btn" value="Upload Photo">
+        {% if pet.photo %}
+        <a href="{% url 'delete_pet_photo' pet.id %}">delete photo</a>
+        {% endif %}
     </form>
     </div>
     {% endfor %}
