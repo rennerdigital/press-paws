@@ -44,6 +44,8 @@ class ReservationUpdateForm(ModelForm):
         room = cleaned_data.get("room")
         date_to = cleaned_data.get("date_to")
         date_from = cleaned_data.get("date_from")
+        if number_of_guests < 1 or number_of_pets < 1:
+            raise forms.ValidationError("We accept one or more guest and pet")
         if number_of_guests > room.people_capacity and number_of_pets > room.pets_capacity:
             raise forms.ValidationError("This is way too many pets and people for this room!")
         elif number_of_pets > room.pets_capacity:

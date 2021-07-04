@@ -45,8 +45,8 @@ class Profile(models.Model):
 class Reservation(models.Model):
     date_from = models.DateField()
     date_to = models.DateField()
-    number_of_guests = models.IntegerField()
-    number_of_pets = models.IntegerField()
+    number_of_guests = models.IntegerField(validators=[MinValueValidator(1, message="At least 1 guest")])
+    number_of_pets = models.IntegerField(validators=[MinValueValidator(1, message="At least 1 pet")])
     number_of_nights = models.IntegerField(blank=True, null=True)
     total_owed = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
