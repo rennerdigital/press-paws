@@ -24,7 +24,7 @@
         <a href="{%url 'reservation_detail' reservation.id%}">Details</a>
     </div>
     <hr>
-    {% endif %}
+    {% else %}
     <div class="card-content">
         <span class="card-title">Reservation from {{reservation.date_from}} to {{reservation.date_to}}</span>
         <p>Reservation number: {{reservation.id}}</p>
@@ -33,6 +33,8 @@
         <a href="{%url 'reservation_detail' reservation.id%}">Details</a>
     </div>
     <hr>
+    {% endif %}
+
     {% endif %}
     {% endfor %}
 </div>
