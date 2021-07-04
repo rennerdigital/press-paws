@@ -149,3 +149,9 @@ form {
   padding: 20px;
   border-radius: 20px;
 }
+
+.confetti {
+  position: fixed;
+  display: block;
+  width: 80%;
+}

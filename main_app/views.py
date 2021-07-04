@@ -143,7 +143,7 @@ def create_reservation(request):
           days_error_message = "You have to stay for more than one night!"
         else:
           new_reservation.save()
-          return redirect ('reservation_index')
+          return redirect ('successful_reservation')
 
   form = ReservationForm()
 
@@ -202,7 +202,7 @@ def room_create_reservation(request, room_id):
           days_error_message = "You have to stay for more than one night!"
         else:
           new_reservation.save()
-          return redirect ('reservation_index')
+          return redirect ('successful_reservation')
 
   def getDays(date_from, date_to):
     days = []
@@ -219,6 +219,12 @@ def room_create_reservation(request, room_id):
   days = [item for sublist in days for item in sublist]
 
   return render(request, 'main_app/reservation_form.html', {'form': form, 'room': room, "days_error_message": days_error_message, 'error_msg': error_msg, 'bookedDays': days})
+
+def successful_reservation(request):
+  reservations = Reservation.objects.filter(user=request.user.id)
+  latest_reservation = reservations.order_by("-id").first
+  date = datetime.date.today()
+  return render(request, 'main_app/reservation_list_success.html', {'reservations': reservations, 'date': date, 'latest_res': latest_reservation})
 
 class ReservationUpdate(LoginRequiredMixin, UpdateView):
   model = Reservation
@@ -241,7 +247,7 @@ class CreateFeedback(CreateView):
 
   def form_valid(self, form):
     if self.request.user.is_authenticated:
-        form.instance.user = self.request.user
+      form.instance.user = self.request.user
     return super().form_valid(form)
 
   def get_success_url(self):
