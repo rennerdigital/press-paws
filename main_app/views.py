@@ -102,6 +102,7 @@ def add_pet_photo(request, pet_id):
       print('An error occurred uploading file to S3')
   return redirect('profile')
 
+@login_required
 def delete_pet_photo(request, pet_id):
   pet_photo = Photo.objects.get(pet_id=pet_id)
   s3 = boto3.resource('s3')
@@ -236,6 +237,7 @@ def room_create_reservation(request, room_id):
 
   return render(request, 'main_app/reservation_form.html', {'form': form, 'room': room, "days_error_message": days_error_message, 'error_msg': error_msg, 'bookedDays': days})
 
+@login_required
 def successful_reservation(request):
   reservations = Reservation.objects.filter(user=request.user.id)
   latest_reservation = reservations.order_by("-id").first
