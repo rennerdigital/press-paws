@@ -59,7 +59,7 @@ class ReservationRoomForm(ModelForm):
         fields = ['date_from', 'date_to', 'number_of_guests', 'number_of_pets']
 
     def clean(self):
-        cleaned_data=super(ReservationForm,self).clean()
+        cleaned_data=super(ReservationRoomForm,self).clean()
         number_of_guests = cleaned_data.get('number_of_guests')
         number_of_pets = cleaned_data.get('number_of_pets')
         room = cleaned_data.get("room")
