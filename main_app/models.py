@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.base import Model
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinValueValidator
 import datetime
 
 class Hotel(models.Model):
