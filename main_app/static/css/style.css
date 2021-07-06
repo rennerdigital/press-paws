@@ -15,7 +15,7 @@ body {
     background-image: url("https://cdn.wallpapersafari.com/71/79/9yax13.jpg");
     background-size: cover;
 }
-  
+
 main {
    flex: 1 0 auto;
 }
@@ -25,20 +25,36 @@ footer.page-footer {
   text-align: right;
 }
 
-h1, h2, h3, h5, a, p {
+h1, h2, h3, h4, h5, a, p, label, span {
   text-align: center;
-  color: white;
+  color: white !important;
   text-shadow: 2px 2px black;
   opacity: 100%;
 
+}
+
+label {
+  font-size: 18px;
 }
 
 #detail {
   color: white;
 }
 
-.card, .card-panel {
-  background-color: rgba(0,0,0,0.5)
+.card, .card-panel, .card-action {
+  background-color: rgba(255,255,255,0.5) !important;
+  border-radius: 20px !important;
+}
+
+#cardaction {
+  border-radius: 20px;
+}
+
+#makeres {
+  text-align: center;
+  color: white;
+  text-shadow: 2px 2px black;
+  opacity: 100%;
 }
 
 p {
@@ -49,8 +65,53 @@ a {
   padding: 10px;
 }
 
+.btn {
+  background-color: forestgreen !important;
+  font-family: 'Chicle', cursive !important;
+}
+
+.card-title {
+  color: white;
+  text-shadow: 2px 2px black;
+  opacity: 100%;
+}
+
+input {
+  font-family: 'Chicle', cursive !important;
+  color: black;
+  opacity: 100%;
+  font-size: 14px;
+}
+
+
+#details {
+  color: white;
+}
+
+li {
+  color: white;
+  text-shadow: 2px 2px black;
+  opacity: 100%;
+}
+
 .choice {
   display: block;
+}
+
+label {
+  background-color: none !important;
+}
+
+.active {
+  background-color: forestgreen !important;
+}
+
+form {
+  background-color: rgba(255,255,255,0.5) !important;
+}
+
+.teal-text {
+  color: forestgreen !important;
 }
 
 /* Slideshow container */
@@ -174,10 +235,15 @@ form {
 }
 
 .btn a {
-  color: white;
+  color: black;
 }
 
 .page-footer .right ul li a {
   color: white;
   margin-right: 10px
 }
+
+.modal {
+  color: black !important;
+}
+
