@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.base import Model
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinValueValidator
 import datetime
 
 class Hotel(models.Model):
@@ -45,8 +45,8 @@ class Profile(models.Model):
 class Reservation(models.Model):
     date_from = models.DateField()
     date_to = models.DateField()
-    number_of_guests = models.IntegerField()
-    number_of_pets = models.IntegerField()
+    number_of_guests = models.IntegerField(validators=[MinValueValidator(1, message="At least 1 guest")])
+    number_of_pets = models.IntegerField(validators=[MinValueValidator(1, message="At least 1 pet")])
     number_of_nights = models.IntegerField(blank=True, null=True)
     total_owed = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
