@@ -79,9 +79,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'presspaws',
-        # "HOST": 'localhost',
-        # 'USER': 'postgres',
-        # 'PASSWORD': 'renner',
+        "HOST": 'localhost',
+        'USER': 'postgres',
+        'PASSWORD': 'renner',
 
     }
 }
