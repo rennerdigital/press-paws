@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %} 
 
-    <h1>Rooms list</h1>
+    <h1>All Rooms</h1>
 
     {% for room in room_list %}
     <div class="card">
@@ -11,7 +11,7 @@
             <span class="card-title">{{room.name}}</span>
             <p>Capacity (people): {{room.people_capacity}}</p>
             <p>Capacity (pets): {{room.pets_capacity}}</p>
-            <p>Price per night: {{room.price}}</p>
+            <p>Price per night: ${{room.price}} (CAD)</p>
         </div>
         <div class="card-action">
             <a id="detail" href="{% url 'room_detail' room.id %}">Details</a>

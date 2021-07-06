@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import uuid
 import boto3
 from .models import Feedback, Hotel, Room, Profile, User, Reservation, Pet, Photo, Feedback
-from .forms import SignUpForm, ReservationForm, PetForm, ReservationRoomForm, ReservationUpdateForm
+from .forms import SignUpForm, ReservationForm, PetForm, ReservationRoomForm
 import datetime
 
 from main_app import models
@@ -43,6 +43,15 @@ class ProfileCreate(LoginRequiredMixin, CreateView):
     model = Profile
     fields = ['phone', 'address', 'credit_card']
 
+    def get_form(self, form_class=None):
+      if form_class is None:
+        form_class = self.get_form_class()
+
+      form = super(ProfileCreate, self).get_form(form_class)
+      form.fields['phone'].widget = forms.TextInput(attrs={'placeholder': '###-###-####'})
+      form.fields['credit_card'].widget = forms.TextInput(attrs={'placeholder': '####-####-####-####'})
+      return form
+
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
@@ -50,11 +59,18 @@ class ProfileCreate(LoginRequiredMixin, CreateView):
 
 @login_required
 def profile(request):
+  try:
+    Profile.objects.get(user=request.user)
     profile = Profile.objects.get(user=request.user)
     pet_form = PetForm()
     return render(request, 'main_app/profile.html', {
         'profile': profile,
         'pet_form': pet_form
+      })
+  except Profile.DoesNotExist:
+    profile = None
+    return render(request, 'main_app/profile.html', {
+      'profile': profile,
       })
 
 class ProfileUpdate(LoginRequiredMixin, UpdateView):
@@ -86,6 +102,7 @@ def add_pet_photo(request, pet_id):
       print('An error occurred uploading file to S3')
   return redirect('profile')
 
+@login_required
 def delete_pet_photo(request, pet_id):
   pet_photo = Photo.objects.get(pet_id=pet_id)
   s3 = boto3.resource('s3')
@@ -125,47 +142,21 @@ def add_room_photo(request, room_id):
       print('An error occurred uploading file to S3')
   return redirect('room_detail', pk=room_id)
 
-@login_required
-def create_reservation(request):
-  days_error_message = ""
-  error_msg = ""
-  if request.method == 'POST':
-    form = ReservationForm(request.POST)
-    if form.is_valid():
-      new_reservation = form.save(commit=False)
-      room = Room.objects.get(id=new_reservation.room_id)
-      new_reservation.room_id = room.id
-      if new_reservation.check_room_capacity() != True:
-        error_msg = "Sorry! You either have more pets or people than this room can hold."
-      else:
-        new_reservation.user_id = request.user.id
-        if new_reservation.at_least_one_night() == False:
-          days_error_message = "You have to stay for more than one night!"
-        else:
-          new_reservation.save()
-          return redirect ('reservation_index')
 
-  form = ReservationForm()
+class ReservationCreate(LoginRequiredMixin, CreateView):
+  model = Reservation
+  form_class = ReservationForm
 
-  def getDays(date_from, date_to):
-    days = []
-    day = date_from
-    while day < date_to:
-      days.append([day.year, day.month -1, day.day ])
-      day += datetime.timedelta(days=1)
-    return days
 
-  reservations = Reservation.objects.all()
-  days = list(map(lambda x: getDays(x.date_from, x.date_to), reservations))
-  days = [item for sublist in days for item in sublist]
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['bookedDays'] = []
+    return context
 
-  context = {
-    'form': form,
-    'bookedDays': [],
-    'error_msg': error_msg,
-    'days_error_message': days_error_message
-    }
-  return render(request, 'main_app/reservation_form.html', context)
+  def form_valid(self, form):
+    form.instance.user = self.request.user
+    return super().form_valid(form)
+
 
 class ReservationList(LoginRequiredMixin, ListView):
     model = Reservation
@@ -182,47 +173,38 @@ class ReservationDetail(LoginRequiredMixin, DetailView):
       return Reservation.objects.filter(user=self.request.user.id)
     success_url = '/reservations/'
 
+class ReservationRoomCreate(LoginRequiredMixin, CreateView):
+  model = Reservation
+  form_class = ReservationRoomForm
+
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    room_reservations = Reservation.objects.filter(room_id = self.kwargs['room_id'])
+    days = list(map(lambda x: getDays(x.date_from, x.date_to), room_reservations))
+    days = [item for sublist in days for item in sublist] 
+    context['bookedDays'] = days
+    print("req", self.request)
+    print("room id", self.kwargs['room_id'])
+    context['room'] = Room.objects.get(id=self.kwargs['room_id'])
+    return context
+
+  def form_valid(self, form):
+    form.instance.user = self.request.user
+    form.instance.room = Room.objects.get(id=self.kwargs['room_id'])
+    return super().form_valid(form)
+
+
 @login_required
-def room_create_reservation(request, room_id):
-  days_error_message = ""
-  error_msg = ""
-  if request.method == 'POST':
-    form = ReservationRoomForm(request.POST)
-    room = Room.objects.get(id=room_id)
-    if form.is_valid():
-      new_reservation = form.save(commit=False)
-      new_reservation.room_id = room_id
-      new_reservation.check_room_capacity()
-      if new_reservation.check_room_capacity() != True:
-        error_msg = "Sorry! You either have more pets or people than this room can hold."
-      else:
-        new_reservation.user_id = request.user.id
-        room = Room.objects.get(id=new_reservation.room.id)
-        if new_reservation.at_least_one_night() == False:
-          days_error_message = "You have to stay for more than one night!"
-        else:
-          new_reservation.save()
-          return redirect ('reservation_index')
-
-  def getDays(date_from, date_to):
-    days = []
-    day = date_from
-    while day < date_to:
-      days.append([day.year, day.month -1, day.day ])
-      day += datetime.timedelta(days=1)
-    return days
-
-  form = ReservationRoomForm()
-  room = Room.objects.get(id=room_id)
-  room_reservations = Reservation.objects.filter(room_id = room_id)
-  days = list(map(lambda x: getDays(x.date_from, x.date_to), room_reservations))
-  days = [item for sublist in days for item in sublist]
-
-  return render(request, 'main_app/reservation_form.html', {'form': form, 'room': room, "days_error_message": days_error_message, 'error_msg': error_msg, 'bookedDays': days})
+def successful_reservation(request):
+  reservations = Reservation.objects.filter(user=request.user.id)
+  latest_reservation = reservations.order_by("-id").first
+  date = datetime.date.today()
+  return render(request, 'main_app/reservation_list_success.html', {'reservations': reservations, 'date': date, 'latest_res': latest_reservation})
 
 class ReservationUpdate(LoginRequiredMixin, UpdateView):
   model = Reservation
-  form_class = ReservationUpdateForm
+  form_class = ReservationForm
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['bookedDays'] = []
@@ -241,7 +223,7 @@ class CreateFeedback(CreateView):
 
   def form_valid(self, form):
     if self.request.user.is_authenticated:
-        form.instance.user = self.request.user
+      form.instance.user = self.request.user
     return super().form_valid(form)
 
   def get_success_url(self):
@@ -249,3 +231,11 @@ class CreateFeedback(CreateView):
       if next_url:
         return next_url
       return reverse('home')
+
+def getDays(date_from, date_to):
+    days = []
+    day = date_from
+    while day < date_to:
+      days.append([day.year, day.month -1, day.day ])
+      day += datetime.timedelta(days=1)
+    return days
